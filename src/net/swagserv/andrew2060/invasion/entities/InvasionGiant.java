@@ -63,7 +63,6 @@ public class InvasionGiant {
             this.effects.add(PotionEffectType.INCREASE_DAMAGE.createEffect(100, 2));
             this.effects.add(PotionEffectType.DAMAGE_RESISTANCE.createEffect(100, 1));
             this.effects.add(PotionEffectType.FIRE_RESISTANCE.createEffect(100, 1));
-            this.effects.add(PotionEffectType.REGENERATION.createEffect(100, 1));
             break;
         }
         case 3: {
@@ -72,7 +71,7 @@ public class InvasionGiant {
             this.effects.add(PotionEffectType.INCREASE_DAMAGE.createEffect(100, 2));
             this.effects.add(PotionEffectType.DAMAGE_RESISTANCE.createEffect(100, 2));
             this.effects.add(PotionEffectType.FIRE_RESISTANCE.createEffect(100, 2));
-            this.effects.add(PotionEffectType.REGENERATION.createEffect(100, 2));
+            this.effects.add(PotionEffectType.HARM.createEffect(100, 1));
             break;
         }
         case 4: {
@@ -81,7 +80,7 @@ public class InvasionGiant {
             this.effects.add(PotionEffectType.INCREASE_DAMAGE.createEffect(100, 2));
             this.effects.add(PotionEffectType.DAMAGE_RESISTANCE.createEffect(100, 2));
             this.effects.add(PotionEffectType.FIRE_RESISTANCE.createEffect(100, 2));
-            this.effects.add(PotionEffectType.REGENERATION.createEffect(100, 3));
+            this.effects.add(PotionEffectType.HARM.createEffect(100, 2));
             break;
         }
         }
@@ -233,6 +232,11 @@ public class InvasionGiant {
     public void tick(MobManager mobManager) {
         if(!giant.isValid()) {
             mobManager.removeGiant(this);
+            for(Monster m : minions) {
+                minions.remove(m);
+                continue;
+            }
+            return;
         }
         for(Monster m : minions) {
             if(!m.isValid()) {
@@ -323,9 +327,12 @@ public class InvasionGiant {
                 return;
             }
         }
-        case 5: {   //Teleport
-            giant.setVelocity(giant.getLocation().add(0,5,0).subtract(giant.getLocation()).toVector());
+        case 5: {   //Jump
             final LivingEntity to = target;
+            if(to == null) {
+                return;
+            }
+            giant.setVelocity(giant.getLocation().add(0,5,0).subtract(giant.getLocation()).toVector());
             Bukkit.getScheduler().scheduleSyncDelayedTask(Bukkit.getPluginManager().getPlugin("Swagserv-Invasion"), new Runnable() {
                 @Override
                 public void run() {
