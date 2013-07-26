@@ -1,12 +1,9 @@
-package net.swagserv.andrew2060.invasion.util;
-import net.minecraft.server.Block;
-import net.minecraft.server.EntityHuman;
-import net.minecraft.server.EntityLiving;
-import net.minecraft.server.Item;
-import net.minecraft.server.LocaleI18n;
+package net.kingdomsofarden.andrew2060.invasion.util;
 
+import net.minecraft.server.v1_6_R2.EntityHuman;
+import net.minecraft.server.v1_6_R2.EntityLiving;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.v1_6_R2.entity.CraftLivingEntity;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.util.Vector;
@@ -39,18 +36,6 @@ public class TargettingUtil {
 
     }
 
-
-    public static String getLocalItemName(int MatId){
-        if (MatId==0) return  "Hand";
-        if(MatId < 256){
-            Block b =Block.byId[MatId];
-            return  b.getName();
-        }
-        else{
-            Item b =Item.byId[MatId];
-            return LocaleI18n.get(b.getName() + ".name");
-        }
-    }
 
     public static double hangtime(double launchAngle, double v, double elev, double g){
 
@@ -145,8 +130,8 @@ public class TargettingUtil {
         }
         handle.aA = yaw;
         if (!(handle instanceof EntityHuman))
-            handle.ay = yaw;
-        handle.aB = yaw;
+            handle.aN = yaw;
+        handle.aQ = yaw;
     }
 
 

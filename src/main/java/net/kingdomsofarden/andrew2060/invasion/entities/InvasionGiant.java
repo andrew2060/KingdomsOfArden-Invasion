@@ -1,12 +1,12 @@
-package net.swagserv.andrew2060.invasion.entities;
+package net.kingdomsofarden.andrew2060.invasion.entities;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
-import net.swagserv.andrew2060.invasion.MobManager;
-import net.swagserv.andrew2060.invasion.util.TargettingUtil;
+import net.kingdomsofarden.andrew2060.invasion.MobManager;
+import net.kingdomsofarden.andrew2060.invasion.util.TargettingUtil;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Effect;

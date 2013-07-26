@@ -1,11 +1,11 @@
-package net.swagserv.andrew2060.invasion;
+package net.kingdomsofarden.andrew2060.invasion;
 
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
-import net.swagserv.andrew2060.invasion.entities.InvasionGiant;
+import net.kingdomsofarden.andrew2060.invasion.entities.InvasionGiant;
 
 public class MobManager {
 
@@ -17,7 +17,7 @@ public class MobManager {
         this.giants = new LinkedList<InvasionGiant>();
         //Register Timers for Giants
         plugin.getServer().getScheduler().scheduleSyncRepeatingTask(this.plugin, new Runnable() {
-
+            
             @Override
             public void run() {
                 for(InvasionGiant giant : giants) {

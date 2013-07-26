@@ -1,6 +1,6 @@
-name: Swagserv-Invasion
+name: KingdomsOfArden-Invasion
 version: 1.0
 description: Mob Invasions to Overworld
 author: Andrew2060
-website: http://www.swagserv.net/
-main: net.swagserv.andrew2060.invasion.InvasionPlugin
+website: http://www.kingdomsofarden.net/
+main: net.kingdomsofarden.andrew2060.invasion.InvasionPlugin
