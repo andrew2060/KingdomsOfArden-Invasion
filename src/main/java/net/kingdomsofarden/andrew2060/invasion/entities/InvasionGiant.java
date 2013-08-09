@@ -88,6 +88,7 @@ public class InvasionGiant {
             Giant g = (Giant) spawnLoc.getWorld().spawnEntity(spawnLoc, EntityType.GIANT);
             g.setCustomName("Undead Juggernaut");
             g.setCustomNameVisible(true);
+            g.setRemoveWhenFarAway(false);
             this.giant = g;
         }
         for(PotionEffect effect: effects) {
@@ -194,6 +195,7 @@ public class InvasionGiant {
             zomb.getEquipment().setItemInHand(sword);
             zomb.setCustomName("Undead" + type);
             zomb.setCustomNameVisible(true);
+            zomb.setRemoveWhenFarAway(false);
             minions.add(zomb);
         }
         for(int i = 0; i < skeletons ; i++) {
@@ -210,6 +212,7 @@ public class InvasionGiant {
             skele.getEquipment().setItemInHand(bow);
             skele.setCustomName("Undead" + type + " Archer");
             skele.setCustomNameVisible(true);
+            skele.setRemoveWhenFarAway(false);
             minions.add(skele);
         }
     }

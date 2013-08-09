@@ -8,11 +8,18 @@ import net.kingdomsofarden.andrew2060.invasion.entities.InvasionGiant;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Giant;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.server.PluginDisableEvent;
 
@@ -41,9 +48,77 @@ public class GiantListener implements Listener {
         InvasionGiant giant = new InvasionGiant(toSpawn);
         mobmanager.addGiant(giant);
     }
-    //TODO: DEBUG
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST) 
+    public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
+        if(!(event.getEntity() instanceof LivingEntity)) {
+            return;
+        }
+        LivingEntity lE = (LivingEntity)event.getEntity();
+        if(lE.getCustomName() == null) {
+            return;
+        }
+        if(event.getDamager() instanceof Player) {
+            return;
+        }
+        //Verify that our mob manager has this giant if it is a giant
+        if(lE instanceof Giant) {
+            Giant g = (Giant)lE;
+            //If not, destroy the giant, and make a new one!
+            if(!mobmanager.getGiants().containsKey(g.getUniqueId())) {
+                Location loc = g.getLocation();
+                g.remove();
+                InvasionGiant newGiant = new InvasionGiant(loc);
+                mobmanager.getGiants().put(newGiant.getGiant().getUniqueId(), newGiant);
+            }
+        }
+        if(lE instanceof Player) {
+            return;
+        }
+        //Verify that its something that was spawned by us
+        if(!lE.getCustomName().contains("Undead")) {
+            return;
+        }
+        //Cancel all damage that's not from a player
+        event.setCancelled(true);
+    }
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST) 
+    public void onEntityDamage(EntityDamageEvent event) {
+        if(!(event.getEntity() instanceof LivingEntity)) {
+            return;
+        }
+        LivingEntity lE = (LivingEntity)event.getEntity();
+        if(lE.getCustomName() == null) {
+            return;
+        }
+        //Verify that our mob manager has this giant if it is a giant
+        if(lE instanceof Giant) {
+            Giant g = (Giant)lE;
+            //If not, destroy the giant, and make a new one!
+            if(!mobmanager.getGiants().containsKey(g.getUniqueId())) {
+                Location loc = g.getLocation();
+                g.remove();
+                InvasionGiant newGiant = new InvasionGiant(loc);
+                mobmanager.getGiants().put(newGiant.getGiant().getUniqueId(), newGiant);
+            }
+        }
+        if(lE instanceof Player) {
+            return;
+        }
+        if(event.getCause().equals(DamageCause.ENTITY_ATTACK)) {
+            return;
+        }
+        //Verify that its something that was spawned by us
+        if(!lE.getCustomName().contains("Undead")) {
+            return;
+        }
+        //Cancel all damage that's not from a player
+        event.setCancelled(true);
+    }
     @EventHandler(ignoreCancelled = true)
     public void spawnGiant(PlayerInteractEvent event) {
+        if(!event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
+            return;
+        }
         if(event.getPlayer().getItemInHand().getType().equals(Material.FIRE)) {
             InvasionGiant giant = new InvasionGiant(event.getPlayer().getLocation());
             mobmanager.addGiant(giant);
@@ -51,8 +126,8 @@ public class GiantListener implements Listener {
     }
     @EventHandler(ignoreCancelled = true)
     public void onPluginDisable(PluginDisableEvent event) {
-        if(event.getPlugin().getName().equals("Swagserv-Invasion")) {
-            for(InvasionGiant g : mobmanager.getGiants()) {
+        if(event.getPlugin().getName().equals("KingdomsOfArden-Invasion")) {
+            for(InvasionGiant g : mobmanager.getGiants().values()) {
                 g.kill();
             }
         }
