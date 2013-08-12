@@ -18,11 +18,12 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
-import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.server.PluginDisableEvent;
+
+import com.herocraftonline.heroes.api.events.WeaponDamageEvent;
+import com.herocraftonline.heroes.characters.Hero;
 
 
 public class GiantListener implements Listener {
@@ -50,7 +51,7 @@ public class GiantListener implements Listener {
         mobmanager.addGiant(giant);
     }
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST) 
-    public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
+    public void onWeaponDamage(WeaponDamageEvent event) {
         if(!(event.getEntity() instanceof LivingEntity)) {
             return;
         }
@@ -83,8 +84,10 @@ public class GiantListener implements Listener {
         if(event.getEntity() instanceof Projectile) {
             return;
         }
-        //Cancel all damage that's not from a player
-        event.setCancelled(true);
+        
+        if(!(event.getDamager() instanceof Hero)) {
+            event.setCancelled(true);
+        }
     }
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST) 
     public void onEntityDamage(EntityDamageEvent event) {
@@ -109,11 +112,18 @@ public class GiantListener implements Listener {
         if(lE instanceof Player) {
             return;
         }
-        if(event.getCause().equals(DamageCause.ENTITY_ATTACK)) {
-            return;
-        }
-        if(event.getCause().equals(DamageCause.PROJECTILE)) {
-            return;
+        switch(event.getCause()) {
+        
+        case BLOCK_EXPLOSION:
+        case CUSTOM:
+        case ENTITY_ATTACK:
+        case ENTITY_EXPLOSION:
+        case PROJECTILE:
+        case MAGIC:
+            return;  
+        default:
+            break;
+            
         }
         //Verify that its something that was spawned by us
         if(!lE.getCustomName().contains("Undead")) {
