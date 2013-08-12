@@ -1,10 +1,11 @@
-package net.kingdomsofarden.andrew2060.invasion.entities;
+package net.kingdomsofarden.andrew2060.invasion.monsters;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
+import net.kingdomsofarden.andrew2060.invasion.InvasionPlugin;
 import net.kingdomsofarden.andrew2060.invasion.MobManager;
 import net.kingdomsofarden.andrew2060.invasion.util.TargettingUtil;
 
@@ -235,15 +236,31 @@ public class InvasionGiant {
     public void tick(MobManager mobManager) {
         if(!giant.isValid()) {
             mobManager.removeGiant(this);
-            for(Monster m : minions) {
-                minions.remove(m);
+            for(final Monster m : minions) {
+                Bukkit.getScheduler().runTask(InvasionPlugin.instance, new Runnable() {
+
+                    @Override
+                    public void run() {
+                        minions.remove(m);
+                        
+                    }
+                    
+                });
                 continue;
             }
             return;
         }
-        for(Monster m : minions) {
+        for(final Monster m : minions) {
             if(!m.isValid()) {
-                minions.remove(m);
+                Bukkit.getScheduler().runTask(InvasionPlugin.instance, new Runnable() {
+
+                    @Override
+                    public void run() {
+                        minions.remove(m);
+                        
+                    }
+                    
+                });
                 continue;
             }
             for(PotionEffect effect: effects) {

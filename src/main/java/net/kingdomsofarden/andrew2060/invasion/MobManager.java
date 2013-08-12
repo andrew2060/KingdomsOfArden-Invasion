@@ -3,7 +3,7 @@ package net.kingdomsofarden.andrew2060.invasion;
 import java.util.HashMap;
 import java.util.UUID;
 
-import net.kingdomsofarden.andrew2060.invasion.entities.InvasionGiant;
+import net.kingdomsofarden.andrew2060.invasion.monsters.InvasionGiant;
 
 public class MobManager {
 

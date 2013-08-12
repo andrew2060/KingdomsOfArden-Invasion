@@ -1,9 +1,9 @@
-package net.kingdomsofarden.andrew2060.invasion.entities.listeners;
+package net.kingdomsofarden.andrew2060.invasion.monsters.listeners;
 
 import java.util.Random;
 
 import net.kingdomsofarden.andrew2060.invasion.MobManager;
-import net.kingdomsofarden.andrew2060.invasion.entities.InvasionGiant;
+import net.kingdomsofarden.andrew2060.invasion.monsters.InvasionGiant;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
