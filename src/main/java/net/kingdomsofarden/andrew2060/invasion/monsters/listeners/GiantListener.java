@@ -11,6 +11,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Giant;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -78,6 +79,10 @@ public class GiantListener implements Listener {
         if(!lE.getCustomName().contains("Undead")) {
             return;
         }
+        //Verify non-projectile
+        if(event.getEntity() instanceof Projectile) {
+            return;
+        }
         //Cancel all damage that's not from a player
         event.setCancelled(true);
     }
@@ -105,6 +110,9 @@ public class GiantListener implements Listener {
             return;
         }
         if(event.getCause().equals(DamageCause.ENTITY_ATTACK)) {
+            return;
+        }
+        if(event.getCause().equals(DamageCause.PROJECTILE)) {
             return;
         }
         //Verify that its something that was spawned by us
