@@ -353,7 +353,7 @@ public class InvasionGiant {
                 return;
             }
             giant.setVelocity(giant.getLocation().add(0,5,0).subtract(giant.getLocation()).toVector());
-            Bukkit.getScheduler().scheduleSyncDelayedTask(Bukkit.getPluginManager().getPlugin("Swagserv-Invasion"), new Runnable() {
+            Bukkit.getScheduler().scheduleSyncDelayedTask(InvasionPlugin.instance, new Runnable() {
                 @Override
                 public void run() {
                    giant.teleport(to.getLocation().add(0,4,0));
