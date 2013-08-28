@@ -42,7 +42,7 @@ public class GiantListener implements Listener {
         if(event.getSpawnReason() == SpawnReason.SPAWNER) {
             return;
         }
-        if(!(rand.nextInt(10000) < 1)) {
+        if(!(rand.nextInt(20000) < 1)) {
             return;
         }
         Location loc = event.getEntity().getLocation();
