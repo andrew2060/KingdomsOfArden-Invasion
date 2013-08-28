@@ -3,9 +3,9 @@ package net.kingdomsofarden.andrew2060.invasion.monsters.nmsentities;
 import net.minecraft.server.v1_6_R2.EntityWither;
 import net.minecraft.server.v1_6_R2.World;
 
-public class InvasionNMSWitherBoss extends EntityWither {
+public class EntityInvasionWitherBoss extends EntityWither {
 
-    public InvasionNMSWitherBoss(World world) {
+    public EntityInvasionWitherBoss(World world) {
         super(world);
     }
 
