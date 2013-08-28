@@ -68,26 +68,24 @@ public class InvasionGiant {
         }
         case 3: {
             this.type = " Centurion";
-            this.effects.add(PotionEffectType.SPEED.createEffect(100, 3));
+            this.effects.add(PotionEffectType.SPEED.createEffect(100, 2));
             this.effects.add(PotionEffectType.INCREASE_DAMAGE.createEffect(100, 2));
             this.effects.add(PotionEffectType.DAMAGE_RESISTANCE.createEffect(100, 2));
             this.effects.add(PotionEffectType.FIRE_RESISTANCE.createEffect(100, 2));
-            this.effects.add(PotionEffectType.HARM.createEffect(100, 1));
             break;
         }
         case 4: {
             this.type = " Praetorian";
-            this.effects.add(PotionEffectType.SPEED.createEffect(100, 4));
+            this.effects.add(PotionEffectType.SPEED.createEffect(100, 2));
             this.effects.add(PotionEffectType.INCREASE_DAMAGE.createEffect(100, 2));
             this.effects.add(PotionEffectType.DAMAGE_RESISTANCE.createEffect(100, 2));
             this.effects.add(PotionEffectType.FIRE_RESISTANCE.createEffect(100, 2));
-            this.effects.add(PotionEffectType.HARM.createEffect(100, 2));
             break;
         }
         }
         for(int i = 0; i < rand.nextInt(1)+1;i++) {
             Giant g = (Giant) spawnLoc.getWorld().spawnEntity(spawnLoc, EntityType.GIANT);
-            g.setCustomName("Undead Juggernaut");
+            g.setCustomName("Undead " + type + " Juggernaut");
             g.setCustomNameVisible(true);
             g.setRemoveWhenFarAway(false);
             this.giant = g;
