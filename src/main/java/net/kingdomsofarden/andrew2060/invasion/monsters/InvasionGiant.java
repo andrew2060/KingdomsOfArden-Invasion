@@ -364,24 +364,7 @@ public class InvasionGiant {
                 return;
             }
         }
-        case 5: {   //Jump
-            final LivingEntity to = target;
-            if(to == null) {
-                return;
-            }
-            giant.setVelocity(giant.getLocation().add(0,5,0).subtract(giant.getLocation()).toVector());
-            Bukkit.getScheduler().scheduleSyncDelayedTask(InvasionPlugin.instance, new Runnable() {
-                @Override
-                public void run() {
-                   giant.teleport(to.getLocation().add(0,4,0));
-                   giant.setFallDistance(0);
-                   giant.setVelocity(new Vector());
-                   to.damage(10,giant);
-                }
-                
-            }, 18L);
-            return;
-        }
+        case 5:
         case 6:
         case 7:
         case 8:
