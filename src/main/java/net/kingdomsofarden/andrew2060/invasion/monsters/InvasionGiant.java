@@ -112,8 +112,7 @@ public class InvasionGiant {
             boots = new ItemStack(Material.GOLD_BOOTS);
             sword = new ItemStack(Material.STONE_SWORD);
             boots.addUnsafeEnchantment(Enchantment.PROTECTION_FALL, 1);
-            sword.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 1);
-            bow.addUnsafeEnchantment(Enchantment.ARROW_DAMAGE, 1);
+            chest.addUnsafeEnchantment(Enchantment.THORNS, 1);
             break;
         }
         case 1: {
@@ -123,10 +122,9 @@ public class InvasionGiant {
             boots = new ItemStack(Material.CHAINMAIL_BOOTS);
             sword = new ItemStack(Material.GOLD_SWORD);
             chest.addUnsafeEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 1);
+            chest.addUnsafeEnchantment(Enchantment.THORNS, rand.nextInt(4) + 2);
             boots.addUnsafeEnchantment(Enchantment.PROTECTION_FALL, 2);
-            sword.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 2);
             sword.addUnsafeEnchantment(Enchantment.FIRE_ASPECT, 1);
-            bow.addUnsafeEnchantment(Enchantment.ARROW_DAMAGE, 2);
             break;
         }
         case 2: {
@@ -135,13 +133,12 @@ public class InvasionGiant {
             leggings = new ItemStack(Material.IRON_LEGGINGS);
             boots = new ItemStack(Material.IRON_BOOTS);
             sword = new ItemStack(Material.IRON_SWORD);
+            chest.addUnsafeEnchantment(Enchantment.THORNS, 2);
             chest.addUnsafeEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2);
             chest.addUnsafeEnchantment(Enchantment.PROTECTION_PROJECTILE, 1);
             boots.addUnsafeEnchantment(Enchantment.PROTECTION_FALL, 3);
-            sword.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 3);
             sword.addUnsafeEnchantment(Enchantment.FIRE_ASPECT, 2);
             sword.addUnsafeEnchantment(Enchantment.KNOCKBACK, 1);
-            bow.addUnsafeEnchantment(Enchantment.ARROW_DAMAGE, 3);
             break;
         }
         case 3: {
@@ -152,12 +149,12 @@ public class InvasionGiant {
             sword = new ItemStack(Material.DIAMOND_SWORD);
             chest.addUnsafeEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 3);
             chest.addUnsafeEnchantment(Enchantment.PROTECTION_PROJECTILE, 2);
-            chest.addUnsafeEnchantment(Enchantment.THORNS, 1);
+            chest.addUnsafeEnchantment(Enchantment.THORNS, rand.nextInt(2)+2);
             boots.addUnsafeEnchantment(Enchantment.PROTECTION_FALL, 4);
-            sword.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 4);
-            sword.addUnsafeEnchantment(Enchantment.FIRE_ASPECT, 3);
+            sword.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 1);
+            sword.addUnsafeEnchantment(Enchantment.FIRE_ASPECT, rand.nextInt(2)+2);
             sword.addUnsafeEnchantment(Enchantment.KNOCKBACK, 2);
-            bow.addUnsafeEnchantment(Enchantment.ARROW_DAMAGE, 4);
+            bow.addUnsafeEnchantment(Enchantment.ARROW_DAMAGE, 1);
             break;
         }
         case 4: {
@@ -168,12 +165,12 @@ public class InvasionGiant {
             sword = new ItemStack(Material.DIAMOND_SWORD);
             chest.addUnsafeEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 5);
             chest.addUnsafeEnchantment(Enchantment.PROTECTION_PROJECTILE, 5);
-            chest.addUnsafeEnchantment(Enchantment.THORNS, 2);
+            chest.addUnsafeEnchantment(Enchantment.THORNS, rand.nextInt(4) + 2);
             boots.addUnsafeEnchantment(Enchantment.PROTECTION_FALL, 4);
-            sword.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 5);
-            sword.addUnsafeEnchantment(Enchantment.FIRE_ASPECT, 4);
+            sword.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 2);
+            sword.addUnsafeEnchantment(Enchantment.FIRE_ASPECT, rand.nextInt(4)+2);
             sword.addUnsafeEnchantment(Enchantment.KNOCKBACK, 2);
-            bow.addUnsafeEnchantment(Enchantment.ARROW_DAMAGE, 5);
+            bow.addUnsafeEnchantment(Enchantment.ARROW_DAMAGE, 2);
             break;
         }
         }
