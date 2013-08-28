@@ -8,6 +8,7 @@ import java.util.Random;
 import net.kingdomsofarden.andrew2060.invasion.InvasionPlugin;
 import net.kingdomsofarden.andrew2060.invasion.MobManager;
 import net.kingdomsofarden.andrew2060.invasion.util.TargettingUtil;
+import net.kingdomsofarden.andrew2060.toolhandler.util.ImprovementUtil;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Effect;
@@ -105,6 +106,7 @@ public class InvasionGiant {
         ItemStack sword = null;
         ItemStack bow = new ItemStack(Material.BOW);
         switch(tier) {
+        
         case 0: {
             helmet = new ItemStack(Material.GOLD_HELMET); 
             chest = new ItemStack(Material.GOLD_CHESTPLATE);
@@ -151,7 +153,6 @@ public class InvasionGiant {
             boots.addUnsafeEnchantment(Enchantment.PROTECTION_FALL, 4);
             sword.addUnsafeEnchantment(Enchantment.FIRE_ASPECT, rand.nextInt(2)+2);
             sword.addUnsafeEnchantment(Enchantment.KNOCKBACK, 2);
-            bow.addUnsafeEnchantment(Enchantment.ARROW_DAMAGE, 1);
             break;
         }
         case 4: {
@@ -160,14 +161,14 @@ public class InvasionGiant {
             leggings = new ItemStack(Material.DIAMOND_LEGGINGS);
             boots = new ItemStack(Material.DIAMOND_BOOTS);
             sword = new ItemStack(Material.DIAMOND_SWORD);
-            chest.addUnsafeEnchantment(Enchantment.PROTECTION_PROJECTILE, 5);
+            chest.addUnsafeEnchantment(Enchantment.PROTECTION_PROJECTILE, rand.nextInt(3)+3);
             chest.addUnsafeEnchantment(Enchantment.THORNS, rand.nextInt(4) + 2);
-            boots.addUnsafeEnchantment(Enchantment.PROTECTION_FALL, 4);
+            boots.addUnsafeEnchantment(Enchantment.PROTECTION_FALL, rand.nextInt(1) + 4);
             sword.addUnsafeEnchantment(Enchantment.FIRE_ASPECT, rand.nextInt(4)+2);
-            sword.addUnsafeEnchantment(Enchantment.KNOCKBACK, 2);
-            bow.addUnsafeEnchantment(Enchantment.ARROW_DAMAGE, 2);
+            sword.addUnsafeEnchantment(Enchantment.KNOCKBACK, rand.nextInt(1) + 2);
             break;
         }
+        
         }
         
         //Spawn Accompaniment
@@ -177,13 +178,19 @@ public class InvasionGiant {
             if(zomb == null) {
                 continue;
             }
+            ImprovementUtil.setQuality(helmet, rand.nextInt(21) + tier * 20);
+            ImprovementUtil.setQuality(chest, rand.nextInt(21) + tier * 20);
+            ImprovementUtil.setQuality(leggings, rand.nextInt(21) + tier * 20);
+            ImprovementUtil.setQuality(boots, rand.nextInt(21) + tier * 20);
+
             zomb.getEquipment().setArmorContents(new ItemStack[] {
-                    helmet,
-                    chest,
-                    leggings,
-                    boots
+                    helmet.clone(),
+                    chest.clone(),
+                    leggings.clone(),
+                    boots.clone()
             });
-            zomb.getEquipment().setItemInHand(sword);
+            ImprovementUtil.setQuality(sword, rand.nextInt(21) + tier * 20);
+            zomb.getEquipment().setItemInHand(sword.clone());
             zomb.setCustomName("Undead" + type);
             zomb.setCustomNameVisible(true);
             zomb.setRemoveWhenFarAway(false);
@@ -194,12 +201,19 @@ public class InvasionGiant {
             if(skele == null) {
                 continue;
             }
+            
+            ImprovementUtil.setQuality(helmet, rand.nextInt(21) + tier * 20);
+            ImprovementUtil.setQuality(chest, rand.nextInt(21) + tier * 20);
+            ImprovementUtil.setQuality(leggings, rand.nextInt(21) + tier * 20);
+            ImprovementUtil.setQuality(boots, rand.nextInt(21) + tier * 20);
+            
             skele.getEquipment().setArmorContents(new ItemStack[] {
-                    helmet,
-                    chest,
-                    leggings,
-                    boots
+                    helmet.clone(),
+                    chest.clone(),
+                    leggings.clone(),
+                    boots.clone()
             });
+            ImprovementUtil.setQuality(bow, rand.nextInt(21) + tier * 20);
             skele.getEquipment().setItemInHand(bow);
             skele.setCustomName("Undead" + type + " Archer");
             skele.setCustomNameVisible(true);
