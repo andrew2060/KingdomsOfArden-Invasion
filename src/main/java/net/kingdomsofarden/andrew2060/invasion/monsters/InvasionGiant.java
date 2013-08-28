@@ -182,14 +182,21 @@ public class InvasionGiant {
             ImprovementUtil.setQuality(chest, rand.nextInt(21) + tier * 20);
             ImprovementUtil.setQuality(leggings, rand.nextInt(21) + tier * 20);
             ImprovementUtil.setQuality(boots, rand.nextInt(21) + tier * 20);
-
+            ImprovementUtil.applyEnchantmentLevel(helmet, Enchantment.PROTECTION_ENVIRONMENTAL);
+            ImprovementUtil.applyEnchantmentLevel(chest, Enchantment.PROTECTION_ENVIRONMENTAL);
+            ImprovementUtil.applyEnchantmentLevel(leggings, Enchantment.PROTECTION_ENVIRONMENTAL);
+            ImprovementUtil.applyEnchantmentLevel(boots, Enchantment.PROTECTION_ENVIRONMENTAL);
+            
             zomb.getEquipment().setArmorContents(new ItemStack[] {
                     helmet.clone(),
                     chest.clone(),
                     leggings.clone(),
                     boots.clone()
             });
+            
             ImprovementUtil.setQuality(sword, rand.nextInt(21) + tier * 20);
+            ImprovementUtil.applyEnchantmentLevel(sword, Enchantment.DAMAGE_ALL);
+
             zomb.getEquipment().setItemInHand(sword.clone());
             zomb.setCustomName("Undead" + type);
             zomb.setCustomNameVisible(true);
@@ -206,7 +213,11 @@ public class InvasionGiant {
             ImprovementUtil.setQuality(chest, rand.nextInt(21) + tier * 20);
             ImprovementUtil.setQuality(leggings, rand.nextInt(21) + tier * 20);
             ImprovementUtil.setQuality(boots, rand.nextInt(21) + tier * 20);
-            
+            ImprovementUtil.applyEnchantmentLevel(helmet, Enchantment.PROTECTION_ENVIRONMENTAL);
+            ImprovementUtil.applyEnchantmentLevel(chest, Enchantment.PROTECTION_ENVIRONMENTAL);
+            ImprovementUtil.applyEnchantmentLevel(leggings, Enchantment.PROTECTION_ENVIRONMENTAL);
+            ImprovementUtil.applyEnchantmentLevel(boots, Enchantment.PROTECTION_ENVIRONMENTAL);
+
             skele.getEquipment().setArmorContents(new ItemStack[] {
                     helmet.clone(),
                     chest.clone(),
@@ -214,6 +225,8 @@ public class InvasionGiant {
                     boots.clone()
             });
             ImprovementUtil.setQuality(bow, rand.nextInt(21) + tier * 20);
+            ImprovementUtil.applyEnchantmentLevel(sword, Enchantment.ARROW_DAMAGE);
+            
             skele.getEquipment().setItemInHand(bow);
             skele.setCustomName("Undead" + type + " Archer");
             skele.setCustomNameVisible(true);
