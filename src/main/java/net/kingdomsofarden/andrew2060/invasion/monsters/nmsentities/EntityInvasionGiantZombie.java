@@ -2,9 +2,7 @@ package net.kingdomsofarden.andrew2060.invasion.monsters.nmsentities;
 
 import java.util.Random;
 
-import net.kingdomsofarden.andrew2060.invasion.monsters.nmsentities.goals.PathfinderGoalGiantEarthquake;
-import net.kingdomsofarden.andrew2060.invasion.monsters.nmsentities.goals.PathfinderGoalGiantFireWitherskulls;
-import net.kingdomsofarden.andrew2060.invasion.monsters.nmsentities.goals.PathfinderGoalGiantShockwave;
+import net.kingdomsofarden.andrew2060.invasion.monsters.nmsentities.goals.PathfinderGoalMobSkillSelector;
 import net.minecraft.server.v1_6_R2.DamageSource;
 import net.minecraft.server.v1_6_R2.Entity;
 import net.minecraft.server.v1_6_R2.EntityAnimal;
@@ -35,15 +33,13 @@ public class EntityInvasionGiantZombie extends EntityGiantZombie implements IRan
         super(world);
         this.tier = new Random().nextInt(5);
         this.goalSelector.a(0, new PathfinderGoalFloat(this));
-        this.goalSelector.a(1, new PathfinderGoalGiantEarthquake(this));
-        this.goalSelector.a(2, new PathfinderGoalGiantFireWitherskulls(this, 1.0D, 40, 20.0F));
-        this.goalSelector.a(3, new PathfinderGoalGiantShockwave(this));
-        this.goalSelector.a(4, new PathfinderGoalMeleeAttack(this, EntityHuman.class, 0.23F, false));
-        this.goalSelector.a(5, new PathfinderGoalMeleeAttack(this, EntityVillager.class, 0.23F, true));
-        this.goalSelector.a(6, new PathfinderGoalMoveTowardsRestriction(this, 0.23F));
-        this.goalSelector.a(7, new PathfinderGoalMoveThroughVillage(this, 0.23F, false));
-        this.goalSelector.a(8, new PathfinderGoalRandomStroll(this, 1.0D));
-        this.goalSelector.a(9, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
+        this.goalSelector.a(1, new PathfinderGoalMobSkillSelector());
+        this.goalSelector.a(2, new PathfinderGoalMeleeAttack(this, EntityHuman.class, 0.23F, false));
+        this.goalSelector.a(3, new PathfinderGoalMeleeAttack(this, EntityVillager.class, 0.23F, true));
+        this.goalSelector.a(4, new PathfinderGoalMoveTowardsRestriction(this, 0.23F));
+        this.goalSelector.a(5, new PathfinderGoalMoveThroughVillage(this, 0.23F, false));
+        this.goalSelector.a(6, new PathfinderGoalRandomStroll(this, 1.0D));
+        this.goalSelector.a(7, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
         
         this.targetSelector.a(1, new PathfinderGoalHurtByTarget(this, false));
         this.targetSelector.a(2, new PathfinderGoalNearestAttackableTarget(this, EntityHuman.class, 0, true));
