@@ -9,33 +9,27 @@ import net.kingdomsofarden.andrew2060.toolhandler.ToolHandlerPlugin;
 import org.bukkit.Effect;
 import org.bukkit.entity.Animals;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.Giant;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
 
-public class MobActionGiantEarthquake implements MobAction {
+public class MobActionGiantEarthquake extends MobAction {
 
-    private Giant giant;
     private List<LivingEntity> validTargets;
     private Random rand;
-    private long lastTick;
     
-    public MobActionGiantEarthquake(Giant giant) {
-        this.giant = giant;
+    public MobActionGiantEarthquake() {
+        super(new EntityType[] {EntityType.GIANT});
         this.rand = new Random();
-        this.lastTick = System.currentTimeMillis();
     }
 
     @Override
-    public boolean checkUsable() {
+    public boolean checkUsable(LivingEntity giant) {
         if(validTargets != null) {
             validTargets = null;
-        }
-        if(lastTick + 5000 > System.currentTimeMillis()) {
-            return false;
         }
         for(Entity e : giant.getNearbyEntities(16, 5, 16)) {
             if(e instanceof LivingEntity) {
@@ -49,12 +43,11 @@ public class MobActionGiantEarthquake implements MobAction {
                 }
             }
         }
-        this.lastTick = System.currentTimeMillis();
         return validTargets.size() > 0;        
     }
 
     @Override
-    public void tick() {
+    public void tick(LivingEntity giant) {
         for(LivingEntity lE : validTargets) {
             Vector original = lE.getLocation().toVector();
             Vector to = lE.getLocation().add(0, 1, 0).toVector();
@@ -72,4 +65,5 @@ public class MobActionGiantEarthquake implements MobAction {
             lE.getWorld().playEffect(lE.getLocation(), Effect.ZOMBIE_CHEW_WOODEN_DOOR, 1);
         }
     }
+
 }
