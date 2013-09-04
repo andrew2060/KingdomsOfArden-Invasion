@@ -12,6 +12,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import net.kingdomsofarden.andrew2060.invasion.api.MobMinionManager;
 import net.kingdomsofarden.andrew2060.invasion.api.mobskills.MobAction;
 import net.kingdomsofarden.andrew2060.invasion.api.mobskills.MobTargetSelectorAction;
 import net.minecraft.server.v1_6_R2.EntityCreature;
@@ -28,7 +29,9 @@ public class MobGoalManager {
     private HashMap<EntityType,ArrayList<MobAction>> entityActionsMap; 
     private HashMap<EntityType,ArrayList<MobTargetSelectorAction>> entityTargettingMap;
     private Field pathfinderGoalField;
+    public static MobMinionManager minionManager;
     public MobGoalManager() {
+        minionManager = new MobMinionManager();
         this.entityActionsMap = new HashMap<EntityType,ArrayList<MobAction>>();
         this.pathfinderGoalField = null;
         try {
@@ -38,6 +41,17 @@ public class MobGoalManager {
                     MobAction toAdd = (MobAction) actionClass.getConstructor(new Class<?>[] {}).newInstance(new Object[] {});
                     for(EntityType type : toAdd.getMobTypes()) {
                         addMobAction(type, toAdd);
+                    }
+                } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
+                    e.printStackTrace();
+                }
+            }
+            Class<?>[] mobTargettingActions = getClasses("net.kingdomsofarden.andrew2060.invasion.api.mobskills.bundledtargettingactions");
+            for(Class<?> actionClass: mobTargettingActions) {
+                try {
+                    MobTargetSelectorAction toAdd = (MobTargetSelectorAction) actionClass.getConstructor(new Class<?>[] {}).newInstance(new Object[] {});
+                    for(EntityType type : toAdd.getMobTypes()) {
+                        addMobTargettingSelectorAction(type, toAdd);
                     }
                 } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
                     e.printStackTrace();
@@ -61,50 +75,70 @@ public class MobGoalManager {
         }
         return true;
     }
+    public boolean addMobTargettingSelectorAction(EntityType type, MobTargetSelectorAction toAdd) {
+        if(this.entityTargettingMap.containsKey(type)) {
+            this.entityTargettingMap.get(type).add(toAdd);
+        } else {
+            this.entityTargettingMap.put(type, new ArrayList<MobTargetSelectorAction>());
+            this.entityTargettingMap.get(type).add(toAdd);
+        }
+        return true;
+    }
     @SuppressWarnings("rawtypes")
-    public boolean registerGoals(EntityType mobType, Creature mob) {
+    public boolean registerGoals(Creature mob) {
+        EntityType mobType = mob.getType();
         ArrayList<MobAction> actions = this.entityActionsMap.get(mobType);
         ArrayList<MobTargetSelectorAction> targettingActions = this.entityTargettingMap.get(mobType);
-        if(actions == null || !(actions.size() > 0)) {
-            return false;
+        boolean flag = false;
+        if(actions != null && actions.size() > 0) {
+            flag = true;
+            try {
+                EntityCreature nmsEntity = ((CraftCreature)mob).getHandle();
+                Field goalSelectorField = EntityInsentient.class.getField("goalSelector");
+                goalSelectorField.setAccessible(true);
+                PathfinderGoalSelector goalSelector = (PathfinderGoalSelector) goalSelectorField.get(nmsEntity);
+                goalSelector.a(1, new PathfinderGoalMobSkillSelector(mob, actions));
+                goalSelectorField.set(nmsEntity, goalSelector);
+            } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException | ClassCastException e) {
+                e.printStackTrace();
+                return false;
+            }            
         }
-        try {
-            EntityCreature nmsEntity = ((CraftCreature)mob).getHandle();
-            Field goalSelectorField = EntityInsentient.class.getField("goalSelector");
-            goalSelectorField.setAccessible(true);
-            PathfinderGoalSelector goalSelector = (PathfinderGoalSelector) goalSelectorField.get(nmsEntity);
-            goalSelector.a(1, new PathfinderGoalMobSkillSelector(mob, actions));
-            goalSelectorField.set(nmsEntity, goalSelector);
-            Field targetSelectorField = EntityInsentient.class.getField("targetSelector");
-            targetSelectorField.setAccessible(true);
-            PathfinderGoalSelector targetSelector = (PathfinderGoalSelector) targetSelectorField.get(nmsEntity);
-            Field goalListField = PathfinderGoalSelector.class.getField("a");
-            goalListField.setAccessible(true);
-            List goalList = (List) goalListField.get(targetSelector);
-            Set<Object> toRemove = new HashSet<Object>();
-            for(MobTargetSelectorAction targettingAction : targettingActions) {
-                for(Class<? extends PathfinderGoal> clazz : targettingAction.getReplaces()) {
-                    for(Object selectorItem : goalList) {
-                        PathfinderGoal goal = (PathfinderGoal) pathfinderGoalField.get(selectorItem);
-                        if(clazz.isInstance(goal)) {
-                            toRemove.add(selectorItem);
-                            break;
+        
+        if(targettingActions != null && targettingActions.size() > 0) {
+            flag = true;
+            try {
+                EntityCreature nmsEntity = ((CraftCreature)mob).getHandle();
+                Field targetSelectorField = EntityInsentient.class.getField("targetSelector");
+                targetSelectorField.setAccessible(true);
+                PathfinderGoalSelector targetSelector = (PathfinderGoalSelector) targetSelectorField.get(nmsEntity);
+                Field goalListField = PathfinderGoalSelector.class.getField("a");
+                goalListField.setAccessible(true);
+                List goalList = (List) goalListField.get(targetSelector);
+                Set<Object> toRemove = new HashSet<Object>();
+                for(MobTargetSelectorAction targettingAction : targettingActions) {
+                    for(Class<? extends PathfinderGoal> clazz : targettingAction.getReplaces()) {
+                        for(Object selectorItem : goalList) {
+                            PathfinderGoal goal = (PathfinderGoal) pathfinderGoalField.get(selectorItem);
+                            if(clazz.isInstance(goal)) {
+                                toRemove.add(selectorItem);
+                                break;
+                            }
                         }
                     }
                 }
+                for(Object obj : toRemove) {
+                    goalList.remove(obj);
+                }
+                goalListField.set(targetSelector, goalList);
+                targetSelector.a(1,new PathfinderGoalMobSkillTargetting(mob,targettingActions));
+                targetSelectorField.set(nmsEntity, targetSelector);
+            } catch (NoSuchFieldException | IllegalArgumentException | IllegalAccessException e) {
+                e.printStackTrace();
+                return false;
             }
-            for(Object obj : toRemove) {
-                goalList.remove(obj);
-            }
-            goalListField.set(targetSelector, goalList);
-            targetSelector.a(1,new PathfinderGoalMobSkillTargetting(mob,targettingActions));
-            targetSelectorField.set(nmsEntity, targetSelector);
-        } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException | ClassCastException e) {
-            e.printStackTrace();
-            return false;
         }
-
-        return true;
+        return flag;
     }
     
     public ArrayList<MobAction> getMobActions(Creature creature) {

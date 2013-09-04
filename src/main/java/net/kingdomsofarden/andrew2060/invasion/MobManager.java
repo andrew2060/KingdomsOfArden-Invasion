@@ -3,38 +3,33 @@ package net.kingdomsofarden.andrew2060.invasion;
 import java.util.HashMap;
 import java.util.UUID;
 
-import net.kingdomsofarden.andrew2060.invasion.monsters.InvasionGiant;
+import org.bukkit.entity.Creature;
+
+import net.kingdomsofarden.andrew2060.invasion.monsters.nms.goals.MobGoalManager;
 
 public class MobManager {
 
-    private InvasionPlugin plugin;
-    HashMap<UUID,InvasionGiant> giants;
-    public MobManager(InvasionPlugin plugin) {
-        this.plugin = plugin;
-        this.giants = new HashMap<UUID,InvasionGiant>();
-        //Register Timers for Giants
-        plugin.getServer().getScheduler().scheduleSyncRepeatingTask(this.plugin, new Runnable() {
-            
-            @Override
-            public void run() {
-                for(InvasionGiant giant : giants.values()) {
-                    giant.tick(MobManager.this);
+    HashMap<UUID,Creature> characters;
+    private MobGoalManager goalManager;
+    public MobManager(InvasionPlugin plugin, MobGoalManager goalManager) {
+        this.characters = new HashMap<UUID,Creature>(); 
+        this.goalManager = goalManager;
+    }
+
+    public void registerCharacter(Creature creature) {
+        if(characters.containsKey(creature.getUniqueId())) {
+            Creature entity = characters.get(creature);
+            if(!entity.equals(creature)) {
+                entity.remove();
+                if(goalManager.registerGoals(creature)) {
+                    characters.put(creature.getUniqueId(), creature);
                 }
-                
+            } else {
             }
-            
-        }, 0, 20);
-        
+        } else {
+            if(goalManager.registerGoals(creature)) {
+                characters.put(creature.getUniqueId(), creature);
+            }
+        }
     }
-    public void addGiant(InvasionGiant giant) {
-        giants.put(giant.getGiant().getUniqueId(),giant);
-        
-    }
-    public void removeGiant(InvasionGiant giant) {
-        giants.remove(giant.getGiant().getUniqueId());
-    }
-    public HashMap<UUID,InvasionGiant> getGiants() {
-        return giants;
-    }
-    
 }
