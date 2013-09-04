@@ -1,13 +1,14 @@
-package net.kingdomsofarden.andrew2060.invasion.api.mobactions.bundled;
+package net.kingdomsofarden.andrew2060.invasion.api.mobskills.bundledActions;
 
 import java.util.List;
 import java.util.Random;
 
-import net.kingdomsofarden.andrew2060.invasion.api.mobactions.MobAction;
+import net.kingdomsofarden.andrew2060.invasion.api.mobskills.MobAction;
 import net.kingdomsofarden.andrew2060.toolhandler.ToolHandlerPlugin;
 
 import org.bukkit.Effect;
 import org.bukkit.entity.Animals;
+import org.bukkit.entity.Creature;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
@@ -22,12 +23,12 @@ public class MobActionGiantEarthquake extends MobAction {
     private Random rand;
     
     public MobActionGiantEarthquake() {
-        super(new EntityType[] {EntityType.GIANT});
+        super(EntityType.GIANT);
         this.rand = new Random();
     }
 
     @Override
-    public boolean checkUsable(LivingEntity giant) {
+    public boolean checkUsable(Creature giant) {
         if(validTargets != null) {
             validTargets = null;
         }
@@ -47,7 +48,7 @@ public class MobActionGiantEarthquake extends MobAction {
     }
 
     @Override
-    public void tick(LivingEntity giant) {
+    public void tick(Creature giant) {
         for(LivingEntity lE : validTargets) {
             Vector original = lE.getLocation().toVector();
             Vector to = lE.getLocation().add(0, 1, 0).toVector();

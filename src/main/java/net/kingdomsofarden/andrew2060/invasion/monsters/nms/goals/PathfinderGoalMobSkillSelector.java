@@ -3,9 +3,9 @@ package net.kingdomsofarden.andrew2060.invasion.monsters.nms.goals;
 import java.util.ArrayList;
 import java.util.Random;
 
-import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Creature;
 
-import net.kingdomsofarden.andrew2060.invasion.api.mobactions.MobAction;
+import net.kingdomsofarden.andrew2060.invasion.api.mobskills.MobAction;
 import net.kingdomsofarden.andrew2060.invasion.util.Config;
 import net.minecraft.server.v1_6_R2.PathfinderGoal;
 
@@ -15,8 +15,8 @@ public class PathfinderGoalMobSkillSelector extends PathfinderGoal {
     private ArrayList<MobAction> actions;
     private Random skillSelector;
     private int selectedSkill;
-    private LivingEntity boss;
-    public PathfinderGoalMobSkillSelector(LivingEntity boss, ArrayList<MobAction> actions) {
+    private Creature boss;
+    public PathfinderGoalMobSkillSelector(Creature boss, ArrayList<MobAction> actions) {
         this.boss = boss;
         this.lastSkillExecution = System.currentTimeMillis();
         this.actions = actions;
@@ -30,7 +30,7 @@ public class PathfinderGoalMobSkillSelector extends PathfinderGoal {
             return false;
         } else {
             this.selectedSkill = this.skillSelector.nextInt(actions.size());
-            return actions.get(this.selectedSkill).checkUsable(boss);
+            return boss.isValid() && actions.get(this.selectedSkill).checkUsable(boss);
         }
     }
     
@@ -40,4 +40,7 @@ public class PathfinderGoalMobSkillSelector extends PathfinderGoal {
         this.lastSkillExecution = System.currentTimeMillis();
     }
 
+    public ArrayList<MobAction> getActions() {
+        return this.actions;
+    }
 }

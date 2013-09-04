@@ -1,13 +1,13 @@
-package net.kingdomsofarden.andrew2060.invasion.api.mobactions;
+package net.kingdomsofarden.andrew2060.invasion.api.mobskills;
 
+import org.bukkit.entity.Creature;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.LivingEntity;
 
 public abstract class MobAction {
     
     private EntityType[] applyToTypes;
     
-    public MobAction(EntityType[] types) {
+    public MobAction(EntityType... types) {
         this.applyToTypes = types;
     }
     /**
@@ -23,13 +23,13 @@ public abstract class MobAction {
      * @param executor The mob performing the action
      * @return Whether the action can be performed
      */
-    public abstract boolean checkUsable(LivingEntity executor);
+    public abstract boolean checkUsable(Creature executor);
     
     /**
      * Is fired when the action itself is performed
      * @param executor The mob performing the action
      */
-    public abstract void tick(LivingEntity executor);
+    public abstract void tick(Creature executor);
     
     
 }
