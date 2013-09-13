@@ -57,7 +57,7 @@ public class MobGoalManager {
                     e.printStackTrace();
                 }
             }
-            Class<?> goalSelectorItemClass = Class.forName("net.minecraft.server.PathfinderGoalSelectorItem");
+            Class<?> goalSelectorItemClass = Class.forName("net.minecraft.server.v1_6_R2.PathfinderGoalSelectorItem");
             pathfinderGoalField = goalSelectorItemClass.getField("a");
             pathfinderGoalField.setAccessible(true);
            
