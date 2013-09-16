@@ -33,6 +33,7 @@ public class MobGoalManager {
     public MobGoalManager() {
         minionManager = new MobMinionManager();
         this.entityActionsMap = new HashMap<EntityType,ArrayList<MobAction>>();
+        this.entityTargettingMap = new HashMap<EntityType,ArrayList<MobTargetSelectorAction>>();
         this.pathfinderGoalField = null;
         try {
             Class<?>[] mobActions = getClasses("net.kingdomsofarden.andrew2060.invasion.api.mobskills.bundledActions");

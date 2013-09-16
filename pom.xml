@@ -5,6 +5,13 @@
    <artifactId>Invasion</artifactId>
    <version>1.0.0</version>
    <name>KingdomsOfArden-Invasion</name>
+   <repositories>
+       <repository>
+          <id>koa-repo</id>
+          <name>Internal Releases</name>
+          <url>http://ci.kingdomsofarden.net/nexus/content/repositories/releases/</url>
+       </repository>
+   </repositories>
    <build>
       <plugins>
          <plugin>
@@ -13,10 +20,12 @@
             <configuration>
                <source>1.7</source>
                <target>1.7</target>
+               <!-- 
                <excludes>
                    <exclude>net/kingdomsofarden/andrew2060/invasion/api/mobskills/bundledActions/*.java</exclude>
                    <exclude>net/kingdomsofarden/andrew2060/invasion/api/mobskills/bundledTargetting/*.java</exclude>
                </excludes>
+               -->
             </configuration>
          </plugin>
       </plugins>
@@ -35,7 +44,7 @@
       <dependency>
          <groupId>com.herocraftonline.heroes</groupId>
          <artifactId>Heroes</artifactId>
-         <version>1.5.3-SNAPSHOT</version>
+         <version>1.5.3.3</version>
       </dependency>
       <dependency>
          <groupId>net.kingdomsofarden</groupId>
