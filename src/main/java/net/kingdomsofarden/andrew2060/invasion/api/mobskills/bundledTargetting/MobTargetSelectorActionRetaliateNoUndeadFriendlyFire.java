@@ -1,4 +1,4 @@
-package net.kingdomsofarden.andrew2060.invasion.api.mobskills.bundledtargettingactions;
+package net.kingdomsofarden.andrew2060.invasion.api.mobskills.bundledTargetting;
 
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.Entity;
