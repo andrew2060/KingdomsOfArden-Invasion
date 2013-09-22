@@ -7,7 +7,7 @@ import org.bukkit.entity.Creature;
 
 import net.kingdomsofarden.andrew2060.invasion.api.mobskills.MobAction;
 import net.kingdomsofarden.andrew2060.invasion.util.Config;
-import net.minecraft.server.v1_6_R2.PathfinderGoal;
+import net.minecraft.server.v1_6_R3.PathfinderGoal;
 
 public class PathfinderGoalMobSkillSelector extends PathfinderGoal {
     

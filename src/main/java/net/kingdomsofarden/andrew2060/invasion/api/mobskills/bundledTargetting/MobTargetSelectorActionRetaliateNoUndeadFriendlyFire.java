@@ -9,7 +9,7 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 
 import net.kingdomsofarden.andrew2060.invasion.api.MobMinionManager;
 import net.kingdomsofarden.andrew2060.invasion.api.mobskills.MobTargetSelectorAction;
-import net.minecraft.server.v1_6_R2.PathfinderGoalHurtByTarget;
+import net.minecraft.server.v1_6_R3.PathfinderGoalHurtByTarget;
 
 public class MobTargetSelectorActionRetaliateNoUndeadFriendlyFire extends MobTargetSelectorAction {
 
