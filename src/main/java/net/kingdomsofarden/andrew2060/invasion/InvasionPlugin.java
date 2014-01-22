@@ -1,5 +1,6 @@
 package net.kingdomsofarden.andrew2060.invasion;
 
+import net.kingdomsofarden.andrew2060.invasion.monsters.listeners.CreatureScaleListener;
 import net.kingdomsofarden.andrew2060.invasion.monsters.listeners.CreatureSpawnListener;
 import net.kingdomsofarden.andrew2060.invasion.monsters.nms.goals.MobGoalManager;
 
@@ -18,6 +19,8 @@ public class InvasionPlugin extends JavaPlugin {
         this.mobManager = new MobManager(this, mobGoalManager);
         //Register Listeners
         this.getServer().getPluginManager().registerEvents(new CreatureSpawnListener(mobManager), this);
+        this.getServer().getPluginManager().registerEvents(new CreatureScaleListener(this), this);
+
     }
 
     public MobGoalManager getMobmanager() {
