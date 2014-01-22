@@ -11,8 +11,7 @@ public abstract class MobAction {
         this.applyToTypes = types;
     }
     /**
-     * Gets the array of valid  
-     * @param type Bukkit Class of the mob type that can perform this action, must be insentinent and extend LivingEntity
+     * Gets the array of valid EntityTypes to which this action pertains  
      */
     public final EntityType[] getMobTypes() {
         return this.applyToTypes;
