@@ -34,22 +34,32 @@
 		<dependency>
 			<groupId>org.spigotmc</groupId>
 			<artifactId>spigot-api</artifactId>
-			<version>1.6.4-R0.1-SNAPSHOT</version>
+			<version>1.7.2-R0.3-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.spigotmc</groupId>
 			<artifactId>spigot</artifactId>
-			<version>1.6.4-R0.1-SNAPSHOT</version>
+			<version>1.7.2-R0.3-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>com.herocraftonline.heroes</groupId>
 			<artifactId>Heroes</artifactId>
-			<version>1.5.3.4-SNAPSHOT</version>
+			<version>1.5.5</version>
 		</dependency>
 		<dependency>
 			<groupId>net.kingdomsofarden</groupId>
 			<artifactId>ToolHandler</artifactId>
 			<version>2.3-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>com.massivecraft</groupId>
+			<artifactId>mcore</artifactId>
+			<version>7.0.1</version>
+		</dependency>
+		<dependency>
+			<groupId>com.massivecraft</groupId>
+			<artifactId>Factions</artifactId>
+			<version>2.3.0</version>
 		</dependency>
 	</dependencies>
 	<distributionManagement>

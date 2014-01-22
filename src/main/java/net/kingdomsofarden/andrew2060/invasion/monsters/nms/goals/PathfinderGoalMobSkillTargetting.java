@@ -2,13 +2,13 @@ package net.kingdomsofarden.andrew2060.invasion.monsters.nms.goals;
 
 import java.util.ArrayList;
 
-import org.bukkit.craftbukkit.v1_6_R3.entity.CraftCreature;
+import org.bukkit.craftbukkit.v1_7_R1.entity.CraftCreature;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.LivingEntity;
 
 import net.kingdomsofarden.andrew2060.invasion.api.mobskills.MobTargetSelectorAction;
-import net.minecraft.server.v1_6_R3.EntityCreature;
-import net.minecraft.server.v1_6_R3.PathfinderGoalTarget;
+import net.minecraft.server.v1_7_R1.EntityCreature;
+import net.minecraft.server.v1_7_R1.PathfinderGoalTarget;
 
 public class PathfinderGoalMobSkillTargetting extends PathfinderGoalTarget {
 

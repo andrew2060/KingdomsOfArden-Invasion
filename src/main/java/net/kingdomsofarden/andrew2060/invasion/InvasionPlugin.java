@@ -14,7 +14,7 @@ public class InvasionPlugin extends JavaPlugin {
     public void onEnable() {
         instance = this;
         //Initialize the mob managers
-        this.setMobGoalManager(new MobGoalManager());
+        this.setMobGoalManager(new MobGoalManager(this));
         this.mobManager = new MobManager(this, mobGoalManager);
         //Register Listeners
         this.getServer().getPluginManager().registerEvents(new CreatureSpawnListener(mobManager), this);

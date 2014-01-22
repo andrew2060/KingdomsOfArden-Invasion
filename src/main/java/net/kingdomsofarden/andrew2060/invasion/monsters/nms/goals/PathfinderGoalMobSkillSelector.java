@@ -7,7 +7,7 @@ import org.bukkit.entity.Creature;
 
 import net.kingdomsofarden.andrew2060.invasion.api.mobskills.MobAction;
 import net.kingdomsofarden.andrew2060.invasion.util.Config;
-import net.minecraft.server.v1_6_R3.PathfinderGoal;
+import net.minecraft.server.v1_7_R1.PathfinderGoal;
 
 public class PathfinderGoalMobSkillSelector extends PathfinderGoal {
     
@@ -15,9 +15,9 @@ public class PathfinderGoalMobSkillSelector extends PathfinderGoal {
     private ArrayList<MobAction> actions;
     private Random skillSelector;
     private int selectedSkill;
-    private Creature boss;
-    public PathfinderGoalMobSkillSelector(Creature boss, ArrayList<MobAction> actions) {
-        this.boss = boss;
+    private Creature mob;
+    public PathfinderGoalMobSkillSelector(Creature mob, ArrayList<MobAction> actions) {
+        this.mob = mob;
         this.lastSkillExecution = System.currentTimeMillis();
         this.actions = actions;
         this.skillSelector = new Random();
@@ -30,13 +30,13 @@ public class PathfinderGoalMobSkillSelector extends PathfinderGoal {
             return false;
         } else {
             this.selectedSkill = this.skillSelector.nextInt(actions.size());
-            return boss.isValid() && actions.get(this.selectedSkill).checkUsable(boss);
+            return mob.isValid() && actions.get(this.selectedSkill).checkUsable(mob);
         }
     }
     
     @Override
     public void e() {
-        this.actions.get(this.selectedSkill).tick(boss);
+        this.actions.get(this.selectedSkill).tick(mob);
         this.lastSkillExecution = System.currentTimeMillis();
     }
 

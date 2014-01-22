@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.net.MalformedURLException;
+import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -22,24 +23,25 @@ import net.kingdomsofarden.andrew2060.invasion.InvasionPlugin;
 import net.kingdomsofarden.andrew2060.invasion.api.MobMinionManager;
 import net.kingdomsofarden.andrew2060.invasion.api.mobskills.MobAction;
 import net.kingdomsofarden.andrew2060.invasion.api.mobskills.MobTargetSelectorAction;
-import net.minecraft.server.v1_6_R3.EntityCreature;
-import net.minecraft.server.v1_6_R3.EntityInsentient;
-import net.minecraft.server.v1_6_R3.PathfinderGoal;
-import net.minecraft.server.v1_6_R3.PathfinderGoalSelector;
+import net.minecraft.server.v1_7_R1.EntityCreature;
+import net.minecraft.server.v1_7_R1.EntityInsentient;
+import net.minecraft.server.v1_7_R1.PathfinderGoal;
+import net.minecraft.server.v1_7_R1.PathfinderGoalSelector;
 
-import org.bukkit.craftbukkit.v1_6_R3.entity.CraftCreature;
+import org.bukkit.craftbukkit.v1_7_R1.entity.CraftCreature;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.EntityType;
-import org.bukkit.plugin.java.PluginClassLoader;
 
-public class MobGoalManager {
+public class MobGoalManager extends URLClassLoader {
 
     private HashMap<EntityType,ArrayList<MobAction>> entityActionsMap; 
     private HashMap<EntityType,ArrayList<MobTargetSelectorAction>> entityTargettingMap;
     private Field pathfinderGoalField;
     public static MobMinionManager minionManager;
 
-    public MobGoalManager() {
+    public MobGoalManager(InvasionPlugin plugin) {
+        
+        super(((URLClassLoader)plugin.getClass().getClassLoader()).getURLs(),plugin.getClass().getClassLoader());
         minionManager = new MobMinionManager();
         this.entityActionsMap = new HashMap<EntityType,ArrayList<MobAction>>();
         this.entityTargettingMap = new HashMap<EntityType,ArrayList<MobTargetSelectorAction>>();
@@ -155,7 +157,6 @@ public class MobGoalManager {
         File modDir = new File(InvasionPlugin.instance.getDataFolder(),"Actions");
         modDir.mkdirs();
         HashMap<String,File> actionFiles = new HashMap<String,File>();
-        PluginClassLoader classLoader = (PluginClassLoader) InvasionPlugin.instance.getClass().getClassLoader();
         for(String actionFileName : modDir.list()) {
             if(actionFileName.contains(".jar")) {
                 File modFile = new File(modDir, actionFileName);
@@ -165,7 +166,7 @@ public class MobGoalManager {
                 } else {
                     actionFiles.put(name, modFile);
                     try {
-                        classLoader.addURL(modFile.toURI().toURL());
+                        this.addURL(modFile.toURI().toURL());
                     } catch (MalformedURLException e) {
                         e.printStackTrace();
                     }
@@ -195,7 +196,7 @@ public class MobGoalManager {
                     }
                 }
                 for(String toLoad: mainClasses) {
-                    Class<?> clazz = Class.forName(toLoad, true, classLoader);
+                    Class<?> clazz = Class.forName(toLoad, true, this);
                     if(clazz.isAssignableFrom(MobAction.class)) {
                         Class<? extends MobAction> actionClass = clazz.asSubclass(MobAction.class);
                         Constructor<? extends MobAction> ctor = actionClass.getConstructor(new Class[] {});
