@@ -28,6 +28,8 @@ public class PathfinderGoalMobSkillSelector extends PathfinderGoal {
     public boolean a() {  
         if(System.currentTimeMillis() - lastSkillExecution < Config.bossSkillCooldown) {
             return false;
+        } else if (mob.getTarget() == null) {
+            return false;
         } else {
             this.selectedSkill = this.skillSelector.nextInt(actions.size());
             return mob.isValid() && actions.get(this.selectedSkill).checkUsable(mob);

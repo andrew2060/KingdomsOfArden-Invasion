@@ -37,6 +37,7 @@ public class MobGoalManager extends URLClassLoader {
     private HashMap<EntityType,ArrayList<MobAction>> entityActionsMap; 
     private HashMap<EntityType,ArrayList<MobTargetSelectorAction>> entityTargettingMap;
     private Field pathfinderGoalField;
+    private InvasionPlugin plugin;
     public static MobMinionManager minionManager;
 
     public MobGoalManager(InvasionPlugin plugin) {
@@ -46,8 +47,9 @@ public class MobGoalManager extends URLClassLoader {
         this.entityActionsMap = new HashMap<EntityType,ArrayList<MobAction>>();
         this.entityTargettingMap = new HashMap<EntityType,ArrayList<MobTargetSelectorAction>>();
         this.pathfinderGoalField = null;
+        this.plugin = plugin;
         try {
-            Class<?> goalSelectorItemClass = Class.forName("net.minecraft.server.v1_6_R2.PathfinderGoalSelectorItem");
+            Class<?> goalSelectorItemClass = Class.forName("net.minecraft.server.v1_7_R1.PathfinderGoalSelectorItem");
             pathfinderGoalField = goalSelectorItemClass.getField("a");
             pathfinderGoalField.setAccessible(true);
         } catch (NoSuchFieldException | SecurityException | ClassNotFoundException e) {
@@ -162,7 +164,7 @@ public class MobGoalManager extends URLClassLoader {
                 File modFile = new File(modDir, actionFileName);
                 String name = actionFileName.toLowerCase().replace(".jar", "");
                 if(actionFiles.containsKey(name)) {
-                    InvasionPlugin.instance.getLogger().log(Level.SEVERE, "A seperate mob action with action name " + name + " was already loaded!");
+                    plugin.getLogger().log(Level.SEVERE, "A seperate mob action with action name " + name + " was already loaded!");
                 } else {
                     actionFiles.put(name, modFile);
                     try {
@@ -185,7 +187,7 @@ public class MobGoalManager extends URLClassLoader {
                         mainClasses = new LinkedList<String>();
                         String next = reader.readLine();
                         while(next != null) {
-                            mainClasses.add(next);
+                            mainClasses.add(next.substring(12));
                             try {
                                 next = reader.readLine();
                                 continue;
@@ -199,9 +201,9 @@ public class MobGoalManager extends URLClassLoader {
                     Class<?> clazz = Class.forName(toLoad, true, this);
                     if(clazz.isAssignableFrom(MobAction.class)) {
                         Class<? extends MobAction> actionClass = clazz.asSubclass(MobAction.class);
-                        Constructor<? extends MobAction> ctor = actionClass.getConstructor(new Class[] {});
-                        MobAction action = ctor.newInstance(new Object[] {});
-                        InvasionPlugin.instance.getLogger().log(Level.INFO, "Action " + toLoad + " loaded successfully!");
+                        Constructor<? extends MobAction> ctor = actionClass.getConstructor(new Class[] {InvasionPlugin.class});
+                        MobAction action = ctor.newInstance(new Object[] {plugin});
+                        plugin.getLogger().log(Level.INFO, "Action " + toLoad + " loaded successfully!");
                         for(EntityType type : action.getMobTypes()) {
                             addMobAction(type, action);
                         }
@@ -212,15 +214,15 @@ public class MobGoalManager extends URLClassLoader {
                         for(EntityType type : action.getMobTypes()) {
                             addMobTargettingSelectorAction(type, action);
                         }
-                        InvasionPlugin.instance.getLogger().log(Level.INFO, "Targetting Action " + toLoad + " loaded successfully!");
+                        plugin.getLogger().log(Level.INFO, "Targetting Action " + toLoad + " loaded successfully!");
                     } else {
-                        InvasionPlugin.instance.getLogger().log(Level.INFO, "Invalid Action " + toLoad + " failed to load. It is neither an action or a target selector!");
+                        plugin.getLogger().log(Level.INFO, "Invalid Action " + toLoad + " failed to load. It is neither an action or a target selector!");
                         continue;
                     }
                 }
                 jarFile.close();
             } catch (Exception e) {
-                InvasionPlugin.instance.getLogger().log(Level.INFO, "The action pack " + entry.getKey() + " failed to load.");
+                plugin.getLogger().log(Level.INFO, "The action pack " + entry.getKey() + " failed to load.");
                 e.printStackTrace();
             }
         }        
