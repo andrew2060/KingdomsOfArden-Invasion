@@ -6,7 +6,7 @@ import java.util.Random;
 import org.bukkit.entity.Creature;
 
 import net.kingdomsofarden.andrew2060.invasion.api.mobskills.MobAction;
-import net.kingdomsofarden.andrew2060.invasion.util.Config;
+import net.kingdomsofarden.andrew2060.invasion.util.InvasionSettings;
 import net.minecraft.server.v1_7_R1.PathfinderGoal;
 
 public class PathfinderGoalMobSkillSelector extends PathfinderGoal {
@@ -26,7 +26,7 @@ public class PathfinderGoalMobSkillSelector extends PathfinderGoal {
     
     @Override
     public boolean a() {  
-        if(System.currentTimeMillis() - lastSkillExecution < Config.bossSkillCooldown) {
+        if(System.currentTimeMillis() - lastSkillExecution < InvasionSettings.get().getBossSkillCooldown()) {
             return false;
         } else if (mob.getTarget() == null) {
             return false;
