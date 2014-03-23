@@ -103,7 +103,7 @@ public class MobGoalManager extends URLClassLoader {
                 Field targetSelectorField = EntityInsentient.class.getField("targetSelector");
                 targetSelectorField.setAccessible(true);
                 PathfinderGoalSelector targetSelector = (PathfinderGoalSelector) targetSelectorField.get(nmsEntity);
-                Field goalListField = PathfinderGoalSelector.class.getField("a");
+                Field goalListField = PathfinderGoalSelector.class.getField("b");
                 goalListField.setAccessible(true);
                 List<?> goalList = (List<?>) goalListField.get(targetSelector);
                 Set<Object> toRemove = new HashSet<Object>();

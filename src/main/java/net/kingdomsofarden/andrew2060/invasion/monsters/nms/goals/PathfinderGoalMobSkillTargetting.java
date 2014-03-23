@@ -8,9 +8,8 @@ import org.bukkit.entity.LivingEntity;
 
 import net.kingdomsofarden.andrew2060.invasion.api.mobskills.MobTargetSelectorAction;
 import net.minecraft.server.v1_7_R1.EntityCreature;
-import net.minecraft.server.v1_7_R1.PathfinderGoalTarget;
 
-public class PathfinderGoalMobSkillTargetting extends PathfinderGoalTarget {
+public class PathfinderGoalMobSkillTargetting extends PathfinderGoalTargetDeobfuscated {
 
     private Creature creature;
     private ArrayList<MobTargetSelectorAction> targettingActions;
@@ -20,14 +19,9 @@ public class PathfinderGoalMobSkillTargetting extends PathfinderGoalTarget {
         this.targettingActions = targettingActions;
         this.creature = creature;
     }
-
-    @Override
-    public boolean a() {
-        return true;
-    }
     
     @Override
-    public void c() {
+    public void setupGoal() {
         for(MobTargetSelectorAction targettingAction : targettingActions) {
             if(targettingAction.canDetermineTarget(creature)) {
                 LivingEntity target = targettingAction.determineTarget(creature);
@@ -41,6 +35,12 @@ public class PathfinderGoalMobSkillTargetting extends PathfinderGoalTarget {
                 continue;
             }
         }
+        super.c();
+    }
+
+    @Override
+    public boolean canAddGoalToQueue() {
+        return true; //Highest priority
     }
 
 }

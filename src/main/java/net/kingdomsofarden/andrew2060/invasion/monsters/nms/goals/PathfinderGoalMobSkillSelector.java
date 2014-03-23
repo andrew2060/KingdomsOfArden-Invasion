@@ -7,9 +7,8 @@ import org.bukkit.entity.Creature;
 
 import net.kingdomsofarden.andrew2060.invasion.api.mobskills.MobAction;
 import net.kingdomsofarden.andrew2060.invasion.util.InvasionSettings;
-import net.minecraft.server.v1_7_R1.PathfinderGoal;
 
-public class PathfinderGoalMobSkillSelector extends PathfinderGoal {
+public class PathfinderGoalMobSkillSelector extends PathfinderGoalDeobfuscated {
     
     private long lastSkillExecution;
     private ArrayList<MobAction> actions;
@@ -24,8 +23,9 @@ public class PathfinderGoalMobSkillSelector extends PathfinderGoal {
         this.selectedSkill = 0;
     }
     
+    //canAddGoalToQueue()
     @Override
-    public boolean a() {  
+    public boolean canAddGoalToQueue() {  
         if(System.currentTimeMillis() - lastSkillExecution < InvasionSettings.get().getBossSkillCooldown()) {
             return false;
         } else if (mob.getTarget() == null) {
@@ -37,12 +37,22 @@ public class PathfinderGoalMobSkillSelector extends PathfinderGoal {
     }
     
     @Override
-    public void e() {
+    public boolean canTickGoal() {
+        return mob.isValid() && actions.get(this.selectedSkill).checkUsable(mob);
+    }
+    
+    @Override
+    public void tickGoal() {
         this.actions.get(this.selectedSkill).tick(mob);
         this.lastSkillExecution = System.currentTimeMillis();
     }
 
     public ArrayList<MobAction> getActions() {
         return this.actions;
+    }
+
+    @Override
+    public void setupGoal() {
+        
     }
 }
