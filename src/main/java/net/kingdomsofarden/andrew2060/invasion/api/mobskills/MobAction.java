@@ -30,6 +30,19 @@ public abstract class MobAction {
     }
     
     /**
+     * Defines whether an action should be added to the queue when the action iterator selects it
+     * @param executor The mob performing the action
+     * @return Whether the action should be added to queue - defaults to true if not overriden
+     */
+    public boolean addToQueue(Creature executor) {return true;}
+    
+    /**
+     * Returns the chances of this action getting added to queue prior to any further checks are called by {@link #addToQueue(Creature)}
+     * @return The chance as a decimal percentage representation between 0.00 and 1.00
+     */
+    public abstract double getQueueChance();
+    
+    /**
      * Is fired prior to the action being performed, if false is returned, skips to the next action
      * 
      * @param executor The mob performing the action
