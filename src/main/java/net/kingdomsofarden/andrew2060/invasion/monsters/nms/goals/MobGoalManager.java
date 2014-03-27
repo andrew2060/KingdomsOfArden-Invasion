@@ -8,6 +8,7 @@ import java.lang.reflect.Field;
 import java.net.MalformedURLException;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -132,7 +133,7 @@ public class MobGoalManager extends URLClassLoader {
         return flag;
     }
     
-    public ArrayList<MobAction> getMobActions(Creature creature) {
+    public Deque<MobAction> getMobActions(Creature creature) {
         try {
             EntityCreature nmsEntity = ((CraftCreature)creature).getHandle();
             Field goalSelectorField = EntityInsentient.class.getField("goalSelector");

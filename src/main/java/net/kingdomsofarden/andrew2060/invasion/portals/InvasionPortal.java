@@ -1,7 +1,12 @@
 package net.kingdomsofarden.andrew2060.invasion.portals;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Random;
+import java.util.UUID;
 
 import net.kingdomsofarden.andrew2060.invasion.InvasionPlugin;
 
@@ -25,24 +30,44 @@ import com.massivecraft.mcore.ps.PS;
 
 public class InvasionPortal {
 
-    private final String id;
-    private double health;
+    private UUID id;
+    private int health;
     private final int difficulty;
-    private Location nexusLowerLeft;
+    private Location nexusCenter;
 
 
-    public static InvasionPortal loadById(String id) {
-        File storageFolder = InvasionPlugin.instance.getDataFolder();
+    public static InvasionPortal fromId(UUID id) {
+        InvasionPlugin plugin = InvasionPlugin.instance;
+        File storageFolder = plugin.getDataFolder();
         storageFolder.mkdir();
-        return null;
-        
+        File file = new File(storageFolder.getPath() + "/" + id.toString());
+        if(!file.exists()) {
+            return null;
+        }
+        try {
+            BufferedReader read = new BufferedReader(new FileReader(file));
+            String line = read.readLine();
+            String[] parsed = line.split("::");
+            String[] locParse = parsed[0].split(":");
+            Location portalFrom = new Location(plugin.getServer().getWorld(locParse[0]), Double.valueOf(locParse[0]), Double.valueOf(locParse[1]), Double.valueOf(locParse[2]));
+            Location portalTo = null;
+            if(!parsed[1].equals("null")) {
+                locParse = parsed[1].split(":");
+                portalTo = new Location(plugin.getServer().getWorld(locParse[0]), Double.valueOf(locParse[0]), Double.valueOf(locParse[1]), Double.valueOf(locParse[2]));
+            }
+            double health = Double.valueOf(parsed[2]);
+            return null;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }        
     }
     
     /**
      * Constructs a new invasion portal and/or loads it from file using coordinates 
      * based on the location of its nexuses (beacon blocks)
      */
-    public InvasionPortal(Chunk chunk, double health, int difficulty, String id) {
+    public InvasionPortal(Chunk chunk, int health, int difficulty, UUID id) {
         Location chunkCenter = chunk.getBlock(7, 0, 7).getLocation();
         chunkCenter = chunkCenter.getWorld().getHighestBlockAt(chunkCenter).getLocation();
         this.id = id;
@@ -68,14 +93,14 @@ public class InvasionPortal {
                 chunkCenter.subtract(0, 1, 0);
             }
         }
-        this.nexusLowerLeft = chunkCenter;
+        this.nexusCenter = chunkCenter;
         this.health = health;
         this.difficulty = difficulty;
         
     }
 
     public void constructTower() {
-        Block lowerLeftBlock = this.nexusLowerLeft.getWorld().getBlockAt(this.nexusLowerLeft);
+        Block lowerLeftBlock = this.nexusCenter.getWorld().getBlockAt(this.nexusCenter);
 
         int[][] walls = new int[][] {{-1,-1},{-1,0},{-1,1},{-1,2},{0,2},{1,2},{2,2},{2,1},{2,0},{2,-1},{1,-1},{0,-1}};
         // Construct Beacon Base
@@ -102,19 +127,21 @@ public class InvasionPortal {
     }
     
     public void registerFactionClaim(boolean createNew) {
-        FactionColl forWorld = FactionColls.get().getForWorld(this.nexusLowerLeft.getWorld().getName());
+        FactionColl forWorld = FactionColls.get().getForWorld(this.nexusCenter.getWorld().getName());
         Faction fact = null;
         if(!forWorld.containsId(this.id)) {
             fact = forWorld.create();
             fact.setName("Dominion Rift");
+            fact.setDescription("Tier " + difficulty + " Dominion Invasion Nexus");
             fact.setFlag(FFlag.PERMANENT, true);
             fact.setPowerBoost((double) 999999);
-            fact.setOpen(false);            
+            fact.setOpen(false);   
+            
         } else {
-            fact = FactionColls.get().getForWorld(this.nexusLowerLeft.getWorld().getName()).get(this.id);
+            fact = FactionColls.get().getForWorld(this.nexusCenter.getWorld().getName()).get(this.id);
         }
         
-        BoardColls.get().setFactionAt(PS.valueOf(this.nexusLowerLeft),fact);
+        BoardColls.get().setFactionAt(PS.valueOf(this.nexusCenter),fact);
     }
 
 }

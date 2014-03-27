@@ -3,39 +3,49 @@ package net.kingdomsofarden.andrew2060.invasion.monsters.nms.goals;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
-import java.util.Iterator;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 import org.bukkit.entity.Creature;
 
+import net.minecraft.util.com.google.common.cache.CacheBuilder;
+import net.minecraft.util.com.google.common.cache.CacheLoader;
+import net.minecraft.util.com.google.common.cache.LoadingCache;
 import net.kingdomsofarden.andrew2060.invasion.api.mobskills.MobAction;
 import net.kingdomsofarden.andrew2060.invasion.util.InvasionSettings;
 
 public class PathfinderGoalMobSkillSelector extends PathfinderGoalDeobfuscated {
     
     private long lastSkillExecution;
-    private ArrayList<MobAction> allActions;
-    private Iterator<MobAction> actionIterator;
+    private Deque<MobAction> allActions;
     private Creature mob;
-    private Deque<MobAction> selectedActions;
     private MobAction perform;
     private long bossSkillCooldown;
     private Random randGen;
+    private LoadingCache<MobAction,Long> failedLaunchTimeout;
     
     public PathfinderGoalMobSkillSelector(Creature mob, ArrayList<MobAction> actions) {
         this.mob = mob;
         this.lastSkillExecution = 0;
-        this.allActions = actions;
-        this.actionIterator = this.allActions.iterator();
-        this.selectedActions = new ArrayDeque<MobAction>();
+        this.allActions = new ArrayDeque<MobAction>(actions);
         this.perform = null;
         this.bossSkillCooldown = InvasionSettings.get().getBossSkillCooldown();
         this.randGen = new Random();
+        this.failedLaunchTimeout = CacheBuilder.newBuilder()
+                .expireAfterWrite(5, TimeUnit.MINUTES)
+                .build(new CacheLoader<MobAction,Long>() {
+
+                    @Override
+                    public Long load(MobAction action) {
+                        return System.currentTimeMillis() + action.getFailChecksCooldown();
+                    }
+                    
+                });
     }
     
     @Override
     public boolean canAddGoalToQueue() {  
-        if(System.currentTimeMillis() - lastSkillExecution < bossSkillCooldown) {
+        if(System.currentTimeMillis() - this.lastSkillExecution < this.bossSkillCooldown) {
             return false;
         } else if (mob.getTarget() == null) {
             return false;
@@ -44,30 +54,19 @@ public class PathfinderGoalMobSkillSelector extends PathfinderGoalDeobfuscated {
         } else {
             return true;
         }
+        
     }
     
     //Selects an action to execute
     @Override
     public boolean canTickGoal() {
-        if(!this.mob.isValid()) { //Cleanup
-            this.selectedActions.clear();
-            this.selectedActions = null;
-            this.perform = null;
-            this.allActions = null;
+        if(this.perform == null) {
+            return false;
+        } else if(!this.perform.checkUsable(this.mob)) {
+            this.failedLaunchTimeout.put(this.perform, System.currentTimeMillis());
             return false;
         }
-        if(System.currentTimeMillis() < this.lastSkillExecution + this.bossSkillCooldown) {
-            return false;
-        }
-        this.perform = this.selectedActions.poll();
-        while(perform != null) {
-            if(perform.checkUsable(this.mob)) {
-                return true;
-            } else {
-                continue;
-            }
-        }
-        return false;
+        return true;
     }
     
     @Override
@@ -76,30 +75,24 @@ public class PathfinderGoalMobSkillSelector extends PathfinderGoalDeobfuscated {
         this.lastSkillExecution = System.currentTimeMillis();
     }
 
-    public ArrayList<MobAction> getActions() {
+    public Deque<MobAction> getActions() {
         return this.allActions;
     }
 
     @Override
     public void setupGoal() {
-        if(this.selectedActions.size() >= 10) { //Only queue up to a maximum of 10 actions
-            return; 
-        }
-        int toQueue = 10 - this.selectedActions.size();
-        int fullIteration = this.allActions.size();
-        while(toQueue > 0 && fullIteration > 0) {
-            if(!this.actionIterator.hasNext()) {
-                this.actionIterator = allActions.iterator();
-            } 
-            MobAction next = this.actionIterator.next();
-            fullIteration--;
-            if(this.randGen.nextDouble() < next.getQueueChance()) {
-                if(next.addToQueue(this.mob)) {
-                    toQueue--;
-                    this.selectedActions.add(next);
-                }
+        this.perform = this.allActions.poll();
+        this.allActions.add(this.perform);
+        if(this.failedLaunchTimeout.getIfPresent(this.perform) != null) {
+            if(System.currentTimeMillis() <= this.failedLaunchTimeout.getUnchecked(this.perform)) {
+                return;
             }
+        } 
+        if(randGen.nextDouble() <= perform.getQueueChance()) {
+            return;
+        } else {
+            this.perform = null;
+            return;
         }
-        
     }
 }

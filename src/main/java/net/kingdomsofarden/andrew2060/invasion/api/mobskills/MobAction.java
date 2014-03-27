@@ -55,6 +55,10 @@ public abstract class MobAction {
      * @param executor The mob performing the action
      */
     public abstract void tick(Creature executor);
+
+    public long getFailChecksCooldown() {
+        return 0;
+    }
     
     
 }
