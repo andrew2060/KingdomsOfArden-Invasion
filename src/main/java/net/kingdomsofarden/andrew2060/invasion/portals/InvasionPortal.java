@@ -47,6 +47,7 @@ public class InvasionPortal {
         try {
             BufferedReader read = new BufferedReader(new FileReader(file));
             String line = read.readLine();
+            read.close();
             String[] parsed = line.split("::");
             String[] locParse = parsed[0].split(":");
             Location portalFrom = new Location(plugin.getServer().getWorld(locParse[0]), Double.valueOf(locParse[0]), Double.valueOf(locParse[1]), Double.valueOf(locParse[2]));
@@ -55,8 +56,9 @@ public class InvasionPortal {
                 locParse = parsed[1].split(":");
                 portalTo = new Location(plugin.getServer().getWorld(locParse[0]), Double.valueOf(locParse[0]), Double.valueOf(locParse[1]), Double.valueOf(locParse[2]));
             }
-            double health = Double.valueOf(parsed[2]);
-            return null;
+            int health = Integer.valueOf(parsed[2]);
+            int difficulty = Integer.valueOf(parsed[3]);
+            return new InvasionPortal(portalFrom, portalTo, health, difficulty, id);
         } catch (IOException e) {
             e.printStackTrace();
             return null;
@@ -67,11 +69,11 @@ public class InvasionPortal {
      * Constructs a new invasion portal and/or loads it from file using coordinates 
      * based on the location of its nexuses (beacon blocks)
      */
-    public InvasionPortal(Chunk chunk, int health, int difficulty, UUID id) {
-        Location chunkCenter = chunk.getBlock(7, 0, 7).getLocation();
+    public InvasionPortal(Location from, Location to, int health, int difficulty, UUID id) {
+        Location chunkCenter = from.getChunk().getBlock(7, 0, 7).getLocation();
         chunkCenter = chunkCenter.getWorld().getHighestBlockAt(chunkCenter).getLocation();
         this.id = id;
-        World world = chunk.getWorld();
+        World world = from.getWorld();
         boolean match = false;
         while(!match) { //TODO: Potentially Dangerous
             switch(world.getBlockAt(chunkCenter).getType()) {
@@ -100,30 +102,7 @@ public class InvasionPortal {
     }
 
     public void constructTower() {
-        Block lowerLeftBlock = this.nexusCenter.getWorld().getBlockAt(this.nexusCenter);
-
-        int[][] walls = new int[][] {{-1,-1},{-1,0},{-1,1},{-1,2},{0,2},{1,2},{2,2},{2,1},{2,0},{2,-1},{1,-1},{0,-1}};
-        // Construct Beacon Base
-        lowerLeftBlock.setType(Material.GOLD_BLOCK);
-        lowerLeftBlock.getRelative(1,0,1).setType(Material.GOLD_BLOCK);
-        lowerLeftBlock.getRelative(1,0,0).setType(Material.GOLD_BLOCK);
-        lowerLeftBlock.getRelative(0,0,1).setType(Material.GOLD_BLOCK);
-        // Construct walls
-        for(int i = 0; i < 10; i++ ) {
-            for(int[] relative : walls) {
-                Block workspace = lowerLeftBlock.getRelative(relative[0],i,relative[1]);
-                if(i != 0 && (relative[0] == 0 || relative[0] == 1 || relative[1] == 0 || relative[1] == 1)) {
-                    workspace.setType(Material.IRON_FENCE);
-                } else {
-                    workspace.setType(Material.NETHER_BRICK);
-                }
-            }
-        }
-        // Construct Ceiling
-        lowerLeftBlock.getRelative(0,10,0).setType(Material.GLASS);
-        lowerLeftBlock.getRelative(1,10,0).setType(Material.GLASS);
-        lowerLeftBlock.getRelative(1,10,1).setType(Material.GLASS);
-        lowerLeftBlock.getRelative(0,10,1).setType(Material.GLASS);
+        
     }
     
     public void registerFactionClaim(boolean createNew) {
@@ -144,4 +123,8 @@ public class InvasionPortal {
         BoardColls.get().setFactionAt(PS.valueOf(this.nexusCenter),fact);
     }
 
+    public void write() {
+        
+    }
+    
 }
