@@ -1,4 +1,4 @@
-package net.kingdomsofarden.andrew2060.invasion.portals;
+package net.kingdomsofarden.andrew2060.invasion.dimensions;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -28,15 +28,14 @@ import com.massivecraft.factions.entity.FactionColl;
 import com.massivecraft.factions.entity.FactionColls;
 import com.massivecraft.mcore.ps.PS;
 
-public class InvasionPortal {
+public class DimensionPortal {
 
     private UUID id;
-    private int health;
     private final int difficulty;
     private Location nexusCenter;
 
 
-    public static InvasionPortal fromId(UUID id) {
+    public static DimensionPortal fromId(UUID id) {
         InvasionPlugin plugin = InvasionPlugin.instance;
         File storageFolder = plugin.getDataFolder();
         storageFolder.mkdir();
@@ -58,7 +57,7 @@ public class InvasionPortal {
             }
             int health = Integer.valueOf(parsed[2]);
             int difficulty = Integer.valueOf(parsed[3]);
-            return new InvasionPortal(portalFrom, portalTo, health, difficulty, id);
+            return new DimensionPortal(portalFrom, portalTo, health, difficulty, id);
         } catch (IOException e) {
             e.printStackTrace();
             return null;
@@ -69,7 +68,7 @@ public class InvasionPortal {
      * Constructs a new invasion portal and/or loads it from file using coordinates 
      * based on the location of its nexuses (beacon blocks)
      */
-    public InvasionPortal(Location from, Location to, int health, int difficulty, UUID id) {
+    public DimensionPortal(Location from, Location to, int health, int difficulty, UUID id) {
         Location chunkCenter = from.getChunk().getBlock(7, 0, 7).getLocation();
         chunkCenter = chunkCenter.getWorld().getHighestBlockAt(chunkCenter).getLocation();
         this.id = id;
@@ -96,7 +95,6 @@ public class InvasionPortal {
             }
         }
         this.nexusCenter = chunkCenter;
-        this.health = health;
         this.difficulty = difficulty;
         
     }
