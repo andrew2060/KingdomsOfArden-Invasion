@@ -12,7 +12,7 @@
 		</repository>
 		<repository>
 			<id>koa-repo</id>
-			<url>http://ci.kingdomsofarden.net/nexus/content/groups/public/</url>
+			<url>http://repo.kingdomsofarden.net/content/groups/public/</url>
 		</repository>
 		<repository>
 			<id>onarandombox</id>
@@ -38,12 +38,12 @@
 		<dependency>
 			<groupId>org.spigotmc</groupId>
 			<artifactId>spigot-api</artifactId>
-			<version>1.7.2-R0.4-SNAPSHOT</version>
+			<version>1.7.10-R0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.spigotmc</groupId>
 			<artifactId>spigot</artifactId>
-			<version>1.7.2-R0.4-SNAPSHOT</version>
+			<version>1.7.10-R0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>com.onarandombox.multiversecore</groupId>
@@ -89,12 +89,12 @@
 		<dependency>
 			<groupId>net.milkbowl.vault</groupId>
 			<artifactId>Vault</artifactId>
-			<version>1.2.30</version>
+			<version>1.2.32</version>
 		</dependency>
 		<dependency>
 			<groupId>com.herocraftonline.heroes</groupId>
 			<artifactId>Heroes</artifactId>
-			<version>1.5.5.1-SNAPSHOT</version>
+			<version>1.5.5.4-SNAPSHOT</version>
 			<exclusions>
 				<exclusion>
 					<artifactId>bukkit</artifactId>

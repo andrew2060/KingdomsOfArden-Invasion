@@ -1,6 +1,7 @@
 package net.kingdomsofarden.andrew2060.invasion.monsters.nms.goals;
 
-import net.minecraft.server.v1_7_R1.PathfinderGoal;
+import net.minecraft.server.v1_7_R4.PathfinderGoal;
+
 /**
  * Convenience class that shows deobfuscated mappings for pathfindergoal logic 
  * 

@@ -24,12 +24,12 @@ import net.kingdomsofarden.andrew2060.invasion.InvasionPlugin;
 import net.kingdomsofarden.andrew2060.invasion.api.MobMinionManager;
 import net.kingdomsofarden.andrew2060.invasion.api.mobskills.MobAction;
 import net.kingdomsofarden.andrew2060.invasion.api.mobskills.MobTargetSelectorAction;
-import net.minecraft.server.v1_7_R1.EntityCreature;
-import net.minecraft.server.v1_7_R1.EntityInsentient;
-import net.minecraft.server.v1_7_R1.PathfinderGoal;
-import net.minecraft.server.v1_7_R1.PathfinderGoalSelector;
+import net.minecraft.server.v1_7_R4.EntityCreature;
+import net.minecraft.server.v1_7_R4.EntityInsentient;
+import net.minecraft.server.v1_7_R4.PathfinderGoal;
+import net.minecraft.server.v1_7_R4.PathfinderGoalSelector;
 
-import org.bukkit.craftbukkit.v1_7_R1.entity.CraftCreature;
+import org.bukkit.craftbukkit.v1_7_R4.entity.CraftCreature;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.EntityType;
 
@@ -50,7 +50,7 @@ public class MobGoalManager extends URLClassLoader {
         this.pathfinderGoalField = null;
         this.plugin = plugin;
         try {
-            Class<?> goalSelectorItemClass = Class.forName("net.minecraft.server.v1_7_R1.PathfinderGoalSelectorItem");
+            Class<?> goalSelectorItemClass = Class.forName("net.minecraft.server.v1_7_R3.PathfinderGoalSelectorItem");
             pathfinderGoalField = goalSelectorItemClass.getField("a");
             pathfinderGoalField.setAccessible(true);
         } catch (NoSuchFieldException | SecurityException | ClassNotFoundException e) {

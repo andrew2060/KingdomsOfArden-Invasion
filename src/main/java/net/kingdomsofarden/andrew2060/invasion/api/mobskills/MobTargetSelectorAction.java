@@ -2,7 +2,7 @@ package net.kingdomsofarden.andrew2060.invasion.api.mobskills;
 
 import java.util.LinkedList;
 
-import net.minecraft.server.v1_7_R1.PathfinderGoal;
+import net.minecraft.server.v1_7_R4.PathfinderGoal;
 
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.EntityType;

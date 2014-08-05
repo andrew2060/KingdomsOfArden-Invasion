@@ -8,6 +8,7 @@ import net.kingdomsofarden.andrew2060.invasion.InvasionPlugin;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -47,7 +48,7 @@ public class DimensionSpawner {
         SpawnEntry next = this.spawnQueue.poll();
         for(int i = 0; i < next.amount; i++) {
             Location spawnLoc = this.location.clone().add(random.nextInt(16), random.nextInt(16), random.nextInt(16));
-            spawnLoc.getWorld().spawnEntity(spawnLoc, next.type);
+            spawnLoc.getWorld().spawnEntity(spawnLoc.getWorld().getHighestBlockAt(spawnLoc).getLocation().add(0,1,0), next.type);
         }
     }
     
@@ -63,8 +64,9 @@ public class DimensionSpawner {
             if(this.health != 1 && this.health != -1) {
                 this.health -= 1;
             } else if(this.health == -1) {
-                if(this.boss != null && !this.boss.isValid()) {
-                    
+                if(this.boss != null && this.boss.isDead()) {
+                    this.location.getBlock().setType(Material.AIR);
+                    this.location.getWorld().createExplosion(this.location, 0.0F, false);
                 }
             } else {
                 this.health = -1;

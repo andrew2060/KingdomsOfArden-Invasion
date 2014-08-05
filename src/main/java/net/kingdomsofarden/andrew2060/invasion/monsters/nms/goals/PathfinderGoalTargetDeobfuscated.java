@@ -1,7 +1,7 @@
 package net.kingdomsofarden.andrew2060.invasion.monsters.nms.goals;
 
-import net.minecraft.server.v1_7_R1.EntityCreature;
-import net.minecraft.server.v1_7_R1.PathfinderGoalTarget;
+import net.minecraft.server.v1_7_R4.EntityCreature;
+import net.minecraft.server.v1_7_R4.PathfinderGoalTarget;
 
 public abstract class PathfinderGoalTargetDeobfuscated extends PathfinderGoalTarget {
 

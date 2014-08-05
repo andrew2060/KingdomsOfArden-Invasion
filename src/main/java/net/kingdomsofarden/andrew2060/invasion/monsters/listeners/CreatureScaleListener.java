@@ -2,16 +2,15 @@ package net.kingdomsofarden.andrew2060.invasion.monsters.listeners;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
+import java.security.SecureRandom;
 import java.util.Random;
 
 import net.kingdomsofarden.andrew2060.invasion.InvasionPlugin;
+import net.kingdomsofarden.andrew2060.invasion.util.Config;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.World;
 import org.bukkit.World.Environment;
 import org.bukkit.entity.EnderDragon;
 import org.bukkit.entity.EntityType;
@@ -29,20 +28,18 @@ import org.bukkit.metadata.FixedMetadataValue;
 
 import com.herocraftonline.heroes.Heroes;
 import com.herocraftonline.heroes.api.events.ExperienceChangeEvent;
-import com.herocraftonline.heroes.api.events.HeroKillCharacterEvent;
 import com.herocraftonline.heroes.api.events.WeaponDamageEvent;
 import com.herocraftonline.heroes.characters.CharacterDamageManager;
 import com.herocraftonline.heroes.characters.Hero;
 import com.herocraftonline.heroes.characters.classes.HeroClass.ExperienceType;
 
 public class CreatureScaleListener implements Listener {
-    
+
     private Random rand;
     private InvasionPlugin plugin;
-    private Heroes heroes;    
-    
+
     private Method getEntityHealth;
-    
+
     private static ItemStack[] diamond;
     private static ItemStack[] chainmail;
     private static ItemStack[] iron;
@@ -56,9 +53,10 @@ public class CreatureScaleListener implements Listener {
         gold = new ItemStack[] {new ItemStack(Material.GOLD_HELMET), new ItemStack(Material.GOLD_CHESTPLATE), new ItemStack(Material.GOLD_LEGGINGS), new ItemStack(Material.GOLD_BOOTS)};
         leather = new ItemStack[] {new ItemStack(Material.LEATHER_HELMET), new ItemStack(Material.LEATHER_CHESTPLATE), new ItemStack(Material.LEATHER_LEGGINGS), new ItemStack(Material.LEATHER_BOOTS)};
     }
-    
+
+
     public CreatureScaleListener(InvasionPlugin plugin) {
-        this.rand = new Random();
+        this.rand = new SecureRandom();
         this.plugin = plugin;
         try {
             this.getEntityHealth = CharacterDamageManager.class.getDeclaredMethod("getEntityMaxHealth", new Class[] {LivingEntity.class});
@@ -66,10 +64,84 @@ public class CreatureScaleListener implements Listener {
             e.printStackTrace();
         }
         this.getEntityHealth.setAccessible(true);
-        this.heroes = (Heroes)plugin.getServer().getPluginManager().getPlugin("Heroes");
     }
-    
-    //Handle Damage Scaling
+
+    @EventHandler(priority=EventPriority.HIGHEST, ignoreCancelled = true) 
+    public void antiArmorListener(WeaponDamageEvent event) {
+        if (event.getEntity() instanceof Monster) {
+            Monster m = (Monster)event.getEntity();
+            int armorSum = 0;
+            for (ItemStack item : m.getEquipment().getArmorContents()) {
+
+                switch(item.getType()) {
+                case DIAMOND_HELMET:
+                    armorSum += 3;
+                    break; 
+                case DIAMOND_CHESTPLATE:
+                    armorSum += 8;
+                    break;
+                case DIAMOND_LEGGINGS:
+                    armorSum += 6;
+                    break;
+                case DIAMOND_BOOTS:
+                    armorSum += 3;
+                    break;
+                case CHAINMAIL_HELMET: 
+                    armorSum += 2;
+                    break;
+                case CHAINMAIL_CHESTPLATE:
+                    armorSum += 5;
+                    break;
+                case CHAINMAIL_LEGGINGS:
+                    armorSum += 4;
+                    break;
+                case CHAINMAIL_BOOTS:
+                    armorSum += 1;
+                    break;
+                case IRON_HELMET:
+                    armorSum += 2;
+                    break;
+                case IRON_CHESTPLATE:
+                    armorSum += 6;
+                    break;
+                case IRON_LEGGINGS:
+                    armorSum += 5;
+                    break;
+                case IRON_BOOTS: 
+                    armorSum += 2;
+                    break;
+                case GOLD_HELMET:
+                    armorSum += 2;
+                    break;
+                case GOLD_CHESTPLATE:
+                    armorSum += 5;
+                    break;
+                case GOLD_LEGGINGS: 
+                    armorSum += 3;
+                case GOLD_BOOTS: 
+                    armorSum += 1;
+                case LEATHER_HELMET:
+                    armorSum += 1;
+                    break;
+                case LEATHER_CHESTPLATE: 
+                    armorSum += 3;
+                    break;
+                case LEATHER_LEGGINGS: 
+                    armorSum += 2;
+                    break;
+                case LEATHER_BOOTS: 
+                    armorSum += 1;
+                    break;
+                default:
+                    break;
+                }
+            }
+            double damage = event.getDamage();
+            double preArmor = 25D/(25 - armorSum) * damage;
+            event.setDamage(preArmor);
+        }
+    }
+
     @EventHandler(priority=EventPriority.HIGHEST, ignoreCancelled = true) 
     public void onMobDamage(WeaponDamageEvent event) {
         if(!(event.getDamager() instanceof Hero)) {
@@ -78,7 +150,7 @@ public class CreatureScaleListener implements Listener {
                 if(!(ent instanceof Monster || ent instanceof Ghast || ent instanceof Slime || ent instanceof Golem || ent instanceof EnderDragon)) {
                     return;
                 }
-                double exponent = (Math.log10(ent.getMaxHealth()/getDefaultMaxHealth(ent))/Math.log10(1.33));
+                double exponent = (Math.log10(ent.getMaxHealth()/getDefaultMaxHealth(ent))/Math.log10(Config.GROWTH_RATE_HEALTH));
                 int tier = Math.round(Math.round(exponent));
                 if(tier == 0) {
                     return;
@@ -87,28 +159,12 @@ public class CreatureScaleListener implements Listener {
                 ent.setMetadata("mobscaling.exponent", new FixedMetadataValue(plugin, exponent));
                 ent.setMetadata("mobscaling.elite", new FixedMetadataValue(plugin, false));
             }
-            
+
             double exponent = ent.getMetadata("mobscaling.exponent").get(0).asDouble();
-            event.setDamage(event.getDamage() * Math.pow(1.2 , exponent));
+            event.setDamage(event.getDamage() * Math.pow(Config.GROWTH_RATE_DMG , exponent));
         }
     }
-    
-    //Handle EXP Scaling
-    @EventHandler(priority=EventPriority.HIGHEST, ignoreCancelled = true)
-    public void onMobExpDrop(ExperienceChangeEvent event) {
-        if(event.getSource() != ExperienceType.KILLING){
-            return;
-        }
-        if(event.getHero().getPlayer().hasMetadata("mobscaling.expreward.exponent")) {
-            double exponent = event.getHero().getPlayer().getMetadata("mobscaling.expreward.exponent").get(0).asDouble();
-            event.setExpGain(event.getExpChange() * Math.pow(1.1 , exponent));
-            event.getHero().getPlayer().removeMetadata("mobscaling.expreward.exponent",plugin);
-        }
-        return;
-    }
-    
-    
-    //Handle Spawn Scaling
+
     @EventHandler(priority=EventPriority.MONITOR, ignoreCancelled = true)
     public void onMonsterSpawn(CreatureSpawnEvent event) {
         LivingEntity entity = event.getEntity();
@@ -124,13 +180,13 @@ public class CreatureScaleListener implements Listener {
         double modifier = spawnLoc.distanceSquared(origin);
         double exponent = 0.00;
         if(spawnLoc.getWorld().getEnvironment().equals(Environment.NETHER)) {
-            exponent = Math.sqrt(modifier/1562500D);
+            exponent = Math.sqrt(modifier/Config.GROWTH_PER_SQUARED_NETHER);
             exponent += 0.5;
         } else {
-            exponent = Math.sqrt(modifier/100000000D);
+            exponent = Math.sqrt(modifier/Config.GROWTH_PER_SQUARED_NORMAL);
         }
-        boolean elite = rand.nextInt(500) <= 1;
-        int tier = Math.round(Math.round(exponent));
+        boolean elite = rand.nextDouble() <= Config.ELITE_MOB_CHANCE;
+        int tier = (int) Math.round(exponent);
         if(entity.getCustomName() == null && (entity instanceof Monster || entity instanceof Ghast)) {
             entity.setCustomName(getCustomName(type,tier,elite));  
             if(elite) {
@@ -147,30 +203,29 @@ public class CreatureScaleListener implements Listener {
             exponent += 0.5;
             tier += 1;
         }
-        double multiplicand = Math.pow(1.33, exponent);
+        double multiplicand = Math.pow(Config.GROWTH_RATE_HEALTH, exponent);
         double health = entity.getMaxHealth() * multiplicand;
         entity.setMaxHealth(health);
         entity.setHealth(entity.getMaxHealth());
         if(type == EntityType.ZOMBIE || type == EntityType.PIG_ZOMBIE) {
             switch(tier) {
-            
+
             case 0: {
-                if(rand.nextInt(100) < 30) {
+                if(rand.nextDouble() < 0.3) {
                     entity.getEquipment().setArmorContents(leather);
                     entity.getEquipment().setItemInHand(new ItemStack(Material.WOOD_SWORD));
                 }
                 break;
             }
             case 1: {
-                int random = rand.nextInt(100);
-                if(random < 70) {
+                if(rand.nextDouble() < 0.3) {
                     entity.getEquipment().setArmorContents(leather);
                     entity.getEquipment().setItemInHand(new ItemStack(Material.WOOD_SWORD));
                 }
                 break;
             }
             case 2: {
-                if(rand.nextInt(100) < 70) {
+                if(rand.nextDouble() < 0.3) {
                     entity.getEquipment().setArmorContents(gold);
                     entity.getEquipment().setItemInHand(new ItemStack(Material.STONE_SWORD));
                 } else {
@@ -180,7 +235,7 @@ public class CreatureScaleListener implements Listener {
                 break;
             }
             case 3: {
-                if(rand.nextInt(100) < 70) {
+                if(rand.nextDouble() < 0.3) {
                     entity.getEquipment().setArmorContents(iron);
                     entity.getEquipment().setItemInHand(new ItemStack(Material.IRON_SWORD));
                 } else {
@@ -190,7 +245,7 @@ public class CreatureScaleListener implements Listener {
                 break;
             }
             case 4: {
-                if(rand.nextInt(100) < 30) {
+                if(rand.nextDouble() < 0.3) {
                     entity.getEquipment().setArmorContents(diamond);
                     entity.getEquipment().setItemInHand(new ItemStack(Material.DIAMOND_SWORD));
                 } else {
@@ -200,7 +255,7 @@ public class CreatureScaleListener implements Listener {
                 break;
             }
             case 5: {
-                if(rand.nextInt(100) < 50) {
+                if(rand.nextDouble() < 0.3) {
                     entity.getEquipment().setArmorContents(diamond);
                     entity.getEquipment().setItemInHand(new ItemStack(Material.DIAMOND_SWORD));
                 } else {
@@ -214,102 +269,77 @@ public class CreatureScaleListener implements Listener {
                 entity.getEquipment().setItemInHand(new ItemStack(Material.DIAMOND_SWORD));
                 break;
             }
-            case 7: {
-                entity.getEquipment().setArmorContents(diamond);
-                entity.getEquipment().setItemInHand(new ItemStack(Material.DIAMOND_SWORD));
-                break;
-            }
-            case 8:
-            case 9:
-            case 10:
-            case 11: 
-            case 12: 
-            case 13: {
-                entity.getEquipment().setArmorContents(diamond);
-                entity.getEquipment().setItemInHand(new ItemStack(Material.DIAMOND_SWORD));
-                break;
-            }
             default: {
-                
+                entity.getEquipment().setArmorContents(diamond);
+                entity.getEquipment().setItemInHand(new ItemStack(Material.DIAMOND_SWORD));
                 break;
             }
-            
+
             }
         }
         if(type == EntityType.SKELETON) {
             switch(tier) {
-            
+
             case 0: {
-                if(rand.nextInt(100) < 10) {
+                if(rand.nextDouble() < 0.1) {
                     entity.getEquipment().setArmorContents(leather);
                 }
                 break;
             }
             case 1: {
-                int random = rand.nextInt(100);
-                if(random < 30) {
+                if(rand.nextDouble() < 0.3) {
                     entity.getEquipment().setArmorContents(leather);
                 }
                 break;
             }
             case 2: {
-                if(rand.nextInt(100) < 70) {
+                if(rand.nextDouble() < 0.3) {
                     entity.getEquipment().setArmorContents(leather);
                 }
-                
+
                 break;
             }
             case 3: {
-                if(rand.nextInt(100) < 70) {
+                if(rand.nextDouble() < 0.3) {
                     entity.getEquipment().setArmorContents(leather);
                 } else {
                     entity.getEquipment().setArmorContents(gold);
                 }
-                
+
                 break;
             }
             case 4: {
-                if(rand.nextInt(100) < 70) {
+                if(rand.nextDouble() < 0.3) {
                     entity.getEquipment().setArmorContents(gold);
                 } else {
                     entity.getEquipment().setArmorContents(leather);
                 }
-                
+
                 break;
             }
             case 5: {
-                if(rand.nextInt(100) < 70) {
+                if(rand.nextDouble() < 0.3) {
                     entity.getEquipment().setArmorContents(gold);
                 } else {
                     entity.getEquipment().setArmorContents(chainmail);
                 }
-                
+
                 break;
             }
             case 6: {
-                if(rand.nextInt(100) < 70) {
+                if(rand.nextDouble() < 0.3) {
                     entity.getEquipment().setArmorContents(chainmail);
                 } else {
                     entity.getEquipment().setArmorContents(gold);
                 }
-                               
-                break;
-            }
-            case 7:
-            case 8:
-            case 9:
-            case 10:
-            case 11: 
-            case 12: 
-            case 13: {
-                entity.getEquipment().setArmorContents(chainmail);
+
                 break;
             }
             default: {
-                
+                entity.getEquipment().setArmorContents(chainmail);
                 break;
             }
-            
+
             }
         }
         float dropchance = 0.01F;
@@ -325,111 +355,28 @@ public class CreatureScaleListener implements Listener {
         entity.setMetadata("mobscaling.tier", new FixedMetadataValue(this.plugin, tier));
         entity.setMetadata("mobscaling.elite", new FixedMetadataValue(this.plugin, elite));
     }
-    
-    //Handle Rewards and Player Tagging
-    @EventHandler(priority=EventPriority.HIGHEST) 
-    public void onHeroKillCharacterReward(HeroKillCharacterEvent event) {
-        LivingEntity defender = event.getDefender().getEntity();
-        if(defender.hasMetadata("mobscaling.exponent")) {
-            double exponent = defender.getMetadata("mobscaling.exponent").get(0).asDouble();
-            int tier = defender.getMetadata("mobscaling.tier").get(0).asInt();
-            processDrops(defender, tier);
-            event.getAttacker().getPlayer().setMetadata("mobscaling.expreward.exponent", new FixedMetadataValue(this.plugin, exponent));
-            event.getAttacker().getPlayer().setMetadata("mobscaling.loot.exponent", new FixedMetadataValue(this.plugin, exponent));
-        } else {
-            if(!(defender instanceof Monster || defender instanceof Ghast || defender instanceof Slime || defender instanceof Golem || defender instanceof EnderDragon)) {
-                return;
-            }
-            double exponent = (Math.log10(defender.getMaxHealth()/getDefaultMaxHealth(defender))/Math.log10(1.33));
-            int tier = Math.round(Math.round(exponent));
-            if(tier == 0) {
-                return;
-            }
-            defender.setMetadata("mobscaling.tier", new FixedMetadataValue(plugin, tier));
-            defender.setMetadata("mobscaling.exponent", new FixedMetadataValue(plugin, exponent));
-            defender.setMetadata("mobscaling.elite", new FixedMetadataValue(plugin, false));
-            processDrops(defender, tier);
-            event.getAttacker().getPlayer().setMetadata("mobscaling.expreward.exponent", new FixedMetadataValue(this.plugin, exponent));
-            event.getAttacker().getPlayer().setMetadata("mobscaling.loot.exponent", new FixedMetadataValue(this.plugin, exponent));
-        }
-        if(defender instanceof Monster || defender instanceof Ghast) {
-            if(defender.hasMetadata("mobscaling.exponent")) {
-                
-            }
-        }
-        return;
-    }
 
-    //Mob Name Generator
+
+
     private String getCustomName(EntityType type, int tier, boolean crit) {
-        
+
         StringBuilder name = new StringBuilder();
         if(crit) {
-            name.append(ChatColor.DARK_RED + "Elite ");
+            name.append(ChatColor.DARK_RED + "Arch ");
         }
-        switch(tier) {
-        
-        case 0: {
-            name.append("Zealot ");
-            break;
+
+        if(tier <= Config.MOB_NAMES.length && tier > 0) {
+            name.append(Config.MOB_NAMES[tier - 1]);
+        } else if (tier > Config.MOB_NAMES.length) {
+            name.append(Config.MOB_NAMES[Config.MOB_NAMES.length - 1]);
+        } else {
+            name.append(Config.MOB_NAMES[0]);
         }
-        case 1: {
-            name.append("Herald ");
-            break;
-        }
-        case 2: {
-            name.append("Reaver ");
-            break;
-        }
-        case 3: {
-            name.append("Revenant ");
-            break;
-        }
-        case 4: {
-            name.append("Tyrannius ");
-            break;
-        }
-        case 5: {
-            name.append("Corpior ");
-            break;
-        }
-        case 6: {
-            name.append("Archon ");
-            break;
-        }
-        case 7: {
-            name.append("Imperatus ");
-            break;
-        }
-        case 8: {
-            name.append("Cherubis ");
-            break;
-        }
-        case 9: {
-            name.append("Nephilis ");
-            break;
-        }
-        case 10: {
-            name.append("Seraphis ");
-            break;  
-        }
-        case 11: {
-            name.append("Harbinger ");
-            break;
-        }
-        case 12: 
-        case 13: {
-            name.append("Dominion ");
-            break;
-        }
-        default: {
-            break;
-        }
-        
-        }
-        
+
+        name.append(" ");
+
         switch(type) {
-        
+
         case BLAZE:
             name.append("Jotunn");
             break;
@@ -440,13 +387,13 @@ public class CreatureScaleListener implements Listener {
             name.append("Garuda");
             break;
         case ENDERMAN:
-            name.append("Leviathan");
+            name.append("Voidwalker");
             break;
         case GHAST:
             name.append("Wraith");
             break;
         case GIANT:
-            name.append("Naglfar");
+            name.append("Juggernaut");
             break;
         case PIG_ZOMBIE:
             name.append("Lich");
@@ -468,32 +415,22 @@ public class CreatureScaleListener implements Listener {
             break;
         default:
             return null;
-            
         }
-        
+
         return name.toString();
     }
-    
-    //Get heroes specific default max health
+
     private double getDefaultMaxHealth(LivingEntity entity) {
         try {
-            return (double) this.getEntityHealth.invoke(heroes.getDamageManager(), entity);
+            return (double) this.getEntityHealth.invoke(Heroes.getInstance().getDamageManager(), entity);
         } catch (IllegalAccessException | IllegalArgumentException
                 | InvocationTargetException e) {
             e.printStackTrace();
             return entity.getMaxHealth();
         }
     }
-    
-    //Process Drops
-    private void processDrops(LivingEntity defender, int tier) {
-        Location deathLoc = defender.getLocation();
-        World world = deathLoc.getWorld();
-        List<ItemStack> loot = new ArrayList<ItemStack>(10);
-        //TODO: Add Loot Drops
-        for(ItemStack lootItem : loot) {
-            world.dropItemNaturally(deathLoc, lootItem);
-        }
-    }
-    
+
+
+
+
 }

@@ -1,9 +1,10 @@
 package net.kingdomsofarden.andrew2060.invasion.util;
 
-import net.minecraft.server.v1_7_R1.EntityHuman;
-import net.minecraft.server.v1_7_R1.EntityLiving;
+import net.minecraft.server.v1_7_R4.EntityHuman;
+import net.minecraft.server.v1_7_R4.EntityLiving;
+
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_7_R1.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.v1_7_R4.entity.CraftLivingEntity;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.util.Vector;
@@ -128,10 +129,10 @@ public class TargettingUtil {
         while (yaw >= 180.0F) {
             yaw -= 360.0F;
         }
-        handle.aA = yaw;
+        handle.az = yaw;
         if (!(handle instanceof EntityHuman))
             handle.aN = yaw;
-        handle.aQ = yaw;
+        handle.aP = yaw;
     }
 
 
