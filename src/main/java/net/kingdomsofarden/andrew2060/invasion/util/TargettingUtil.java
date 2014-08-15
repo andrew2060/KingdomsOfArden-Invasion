@@ -40,12 +40,10 @@ public class TargettingUtil {
 
     public static double hangtime(double launchAngle, double v, double elev, double g){
 
-
-
         double a = v * Math.sin(launchAngle);
         double b = -2*g*elev;
 
-        if(Math.pow(a, 2) + b < 0){
+        if (Math.pow(a, 2) + b < 0){
             return 0;
         }
 
@@ -68,7 +66,7 @@ public class TargettingUtil {
 
 
         //Check unhittable.
-        if( v4 < derp) {
+        if ( v4 < derp) {
             //target unreachable
             // use this to fire at optimal max angle launchAngle = Math.atan( ( 2*g*elev + v2) / (2*g*elev + 2*v2));
             return null;

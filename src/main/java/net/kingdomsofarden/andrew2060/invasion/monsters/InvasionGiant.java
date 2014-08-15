@@ -47,7 +47,7 @@
 //        this.tier = rand.nextInt(5);
 //        this.type = "";
 //        this.effects = new LinkedList<PotionEffect>();
-//        switch(tier) {
+//        switch (tier) {
 //        case 0: {
 //            this.type = " Legionnaire";
 //            this.effects.add(PotionEffectType.SPEED.createEffect(100, 1));
@@ -84,14 +84,14 @@
 //            break;
 //        }
 //        }
-//        for(int i = 0; i < rand.nextInt(1)+1;i++) {
+//        for (int i = 0; i < rand.nextInt(1)+1;i++) {
 //            Giant g = (Giant) spawnLoc.getWorld().spawnEntity(spawnLoc, EntityType.GIANT);
 //            g.setCustomName("Undead " + type + " Juggernaut");
 //            g.setCustomNameVisible(true);
 //            g.setRemoveWhenFarAway(false);
 //            this.giant = g;
 //        }
-//        for(PotionEffect effect: effects) {
+//        for (PotionEffect effect: effects) {
 //            giant.addPotionEffect(effect,true);
 //        }
 //        spawnMinions(10,5,0);
@@ -105,7 +105,7 @@
 //        ItemStack boots = null;
 //        ItemStack sword = null;
 //        ItemStack bow = new ItemStack(Material.BOW);
-//        switch(tier) {
+//        switch (tier) {
 //        
 //        case 0: {
 //            helmet = new ItemStack(Material.GOLD_HELMET); 
@@ -173,9 +173,9 @@
 //        
 //        //Spawn Accompaniment
 //        
-//        for(int i = 0; i < zombies; i++) {
+//        for (int i = 0; i < zombies; i++) {
 //            Zombie zomb  = (Zombie) loc.getWorld().spawnEntity(loc, EntityType.ZOMBIE);
-//            if(zomb == null) {
+//            if (zomb == null) {
 //                continue;
 //            }
 //            ImprovementUtil.setQuality(helmet, rand.nextInt(21) + tier * 20);
@@ -203,9 +203,9 @@
 //            zomb.setRemoveWhenFarAway(false);
 //            minions.add(zomb);
 //        }
-//        for(int i = 0; i < skeletons ; i++) {
+//        for (int i = 0; i < skeletons ; i++) {
 //            Skeleton skele = (Skeleton) loc.getWorld().spawnEntity(loc, EntityType.SKELETON);
-//            if(skele == null) {
+//            if (skele == null) {
 //                continue;
 //            }
 //            
@@ -251,9 +251,9 @@
 //     * @param mobManager 
 //     */
 //    public void tick(MobManager mobManager) {
-//        if(!giant.isValid()) {
+//        if (!giant.isValid()) {
 //            mobManager.removeGiant(this);
-//            for(final Monster m : minions) {
+//            for (final Monster m : minions) {
 //                Bukkit.getScheduler().runTask(InvasionPlugin.instance, new Runnable() {
 //
 //                    @Override
@@ -267,8 +267,8 @@
 //            }
 //            return;
 //        }
-//        for(final Monster m : minions) {
-//            if(!m.isValid()) {
+//        for (final Monster m : minions) {
+//            if (!m.isValid()) {
 //                Bukkit.getScheduler().runTask(InvasionPlugin.instance, new Runnable() {
 //
 //                    @Override
@@ -280,52 +280,52 @@
 //                });
 //                continue;
 //            }
-//            for(PotionEffect effect: effects) {
+//            for (PotionEffect effect: effects) {
 //                m.addPotionEffect(effect,true);
 //            }
 //        }
-//        for(PotionEffect effect: effects) {
+//        for (PotionEffect effect: effects) {
 //            giant.addPotionEffect(effect,true);
 //        }
 //        List<Entity> near = giant.getNearbyEntities(32, 16, 32);
 //        List<LivingEntity> validTargets = new LinkedList<LivingEntity>();
-//        for(Entity e : near) {
-//            if(e instanceof Player || e instanceof Villager || e instanceof Wolf) {
+//        for (Entity e : near) {
+//            if (e instanceof Player || e instanceof Villager || e instanceof Wolf) {
 //                validTargets.add((LivingEntity) e);
 //            }
 //        }
 //        //Get the closest Player
 //        LivingEntity target = null;
 //        double distance = 0;
-//        for(LivingEntity lE : validTargets) {
-//            if(target == null) {
+//        for (LivingEntity lE : validTargets) {
+//            if (target == null) {
 //                target = lE;
 //                distance = lE.getLocation().distanceSquared(giant.getEyeLocation());
 //                continue;
 //            }
 //            double testDistance = lE.getLocation().distanceSquared(giant.getEyeLocation());
-//            if(testDistance < distance) {
+//            if (testDistance < distance) {
 //                distance = testDistance;
 //                target = lE;
 //            }
 //        }
 //        //Switch Target to closest Valid Target
 //        giant.setTarget(target);
-//        if(!(target == null)) {
-//            for(Monster mon : minions) {
-//                if(mon.getLocation().distanceSquared(giant.getLocation()) > 1024) {
+//        if (!(target == null)) {
+//            for (Monster mon : minions) {
+//                if (mon.getLocation().distanceSquared(giant.getLocation()) > 1024) {
 //                    mon.teleport(giant);
 //                }
 //                mon.setTarget(target);
 //            }
 //        }
-//        switch(rand.nextInt(10)) {
+//        switch (rand.nextInt(10)) {
 //        case 0: {   //Shockwave
-//            if(rand.nextInt(10) < 7) {
+//            if (rand.nextInt(10) < 7) {
 //                return;
 //            }
-//            for(LivingEntity lE : validTargets) {
-//                if(lE.getLocation().distanceSquared(giant.getLocation()) <= 64) {
+//            for (LivingEntity lE : validTargets) {
+//                if (lE.getLocation().distanceSquared(giant.getLocation()) <= 64) {
 //                    Vector v =lE.getLocation().add(0, 2, 0).toVector().subtract(giant.getLocation().toVector()).normalize();
 //                    v = v.multiply(4);
 //                    v = v.setY(0);
@@ -337,13 +337,13 @@
 //        }
 //        case 1:
 //        case 2: {   //Earthquake
-//            for(LivingEntity lE : validTargets) {
+//            for (LivingEntity lE : validTargets) {
 //                Vector original = lE.getLocation().toVector();
 //                Vector to = lE.getLocation().add(0, 1, 0).toVector();
 //                Vector applied = to.subtract(original).normalize();
-//                if(lE instanceof Player) {       
+//                if (lE instanceof Player) {
 //                    int roll = rand.nextInt(100);
-//                    if(roll < 30) {
+//                    if (roll < 30) {
 //                        ((Player)lE).addPotionEffect(PotionEffectType.CONFUSION.createEffect(400,10));
 //                    }
 //                }
@@ -357,7 +357,7 @@
 //        }
 //        case 3: 
 //        case 4: {   //Spawn new minions
-//            if(minions.size() > 50) {   //Limit size to 50
+//            if (minions.size() > 50) {   //Limit size to 50
 //                return;
 //            } else {
 //                spawnMinions(rand.nextInt(5)+1, rand.nextInt(5)+1, rand.nextInt(2)+1);
@@ -369,8 +369,8 @@
 //        case 7:
 //        case 8:
 //        case 9: {   //Wither Skull Attack Option
-//            if(!(target == null)) {
-//                for(int i = 0; i < tier*2; i++) {
+//            if (!(target == null)) {
+//                for (int i = 0; i < tier*2; i++) {
 //                    TargettingUtil.faceEntity(giant, target);
 //                    WitherSkull WitherSkull = giant.launchProjectile(WitherSkull.class);
 //                    WitherSkull.setShooter(giant);
@@ -383,7 +383,7 @@
 //    }
 //    public void kill() {
 //        giant.remove();
-//        for(Monster m :minions) {
+//        for (Monster m :minions) {
 //            m.remove();
 //        }
 //    }

@@ -30,7 +30,7 @@ public class MobMinionManager {
     }
     
     private void addMinion(UUID uuid, LivingEntity minion) {
-        if(minions.containsKey(uuid)) {
+        if (minions.containsKey(uuid)) {
             minions.get(uuid).add(minion);
         } else {
             minions.put(uuid, new ArrayList<LivingEntity>());

@@ -60,7 +60,7 @@ public class MobGoalManager extends URLClassLoader {
         loadActions();
     }
     public boolean addMobAction(EntityType type, MobAction action) {
-        if(this.entityActionsMap.containsKey(type)) {
+        if (this.entityActionsMap.containsKey(type)) {
             this.entityActionsMap.get(type).add(action);
         } else {
             this.entityActionsMap.put(type, new ArrayList<MobAction>());
@@ -69,7 +69,7 @@ public class MobGoalManager extends URLClassLoader {
         return true;
     }
     public boolean addMobTargettingSelectorAction(EntityType type, MobTargetSelectorAction toAdd) {
-        if(this.entityTargettingMap.containsKey(type)) {
+        if (this.entityTargettingMap.containsKey(type)) {
             this.entityTargettingMap.get(type).add(toAdd);
         } else {
             this.entityTargettingMap.put(type, new ArrayList<MobTargetSelectorAction>());
@@ -82,7 +82,7 @@ public class MobGoalManager extends URLClassLoader {
         ArrayList<MobAction> actions = this.entityActionsMap.get(mobType);
         ArrayList<MobTargetSelectorAction> targettingActions = this.entityTargettingMap.get(mobType);
         boolean flag = false;
-        if(actions != null && actions.size() > 0) {
+        if (actions != null && actions.size() > 0) {
             flag = true;
             try {
                 EntityCreature nmsEntity = ((CraftCreature)mob).getHandle();
@@ -97,7 +97,7 @@ public class MobGoalManager extends URLClassLoader {
             }            
         }
         
-        if(targettingActions != null && targettingActions.size() > 0) {
+        if (targettingActions != null && targettingActions.size() > 0) {
             flag = true;
             try {
                 EntityCreature nmsEntity = ((CraftCreature)mob).getHandle();
@@ -108,18 +108,18 @@ public class MobGoalManager extends URLClassLoader {
                 goalListField.setAccessible(true);
                 List<?> goalList = (List<?>) goalListField.get(targetSelector);
                 Set<Object> toRemove = new HashSet<Object>();
-                for(MobTargetSelectorAction targettingAction : targettingActions) {
-                    for(Class<? extends PathfinderGoal> clazz : targettingAction.getReplaces()) {
-                        for(Object selectorItem : goalList) {
+                for (MobTargetSelectorAction targettingAction : targettingActions) {
+                    for (Class<? extends PathfinderGoal> clazz : targettingAction.getReplaces()) {
+                        for (Object selectorItem : goalList) {
                             PathfinderGoal goal = (PathfinderGoal) pathfinderGoalField.get(selectorItem);
-                            if(clazz.isInstance(goal)) {
+                            if (clazz.isInstance(goal)) {
                                 toRemove.add(selectorItem);
                                 break;
                             }
                         }
                     }
                 }
-                for(Object obj : toRemove) {
+                for (Object obj : toRemove) {
                     goalList.remove(obj);
                 }
                 goalListField.set(targetSelector, goalList);
@@ -142,10 +142,10 @@ public class MobGoalManager extends URLClassLoader {
             Field goalListField = PathfinderGoalSelector.class.getField("a");
             goalListField.setAccessible(true);
             List<?> goalList = (List<?>) goalListField.get(goalSelector);
-            for(int i = 0; i < goalList.size(); i++) {
+            for (int i = 0; i < goalList.size(); i++) {
                 Object selectorItem = goalList.get(i);
                 PathfinderGoal goal = (PathfinderGoal) pathfinderGoalField.get(selectorItem);
-                if(goal instanceof PathfinderGoalMobSkillSelector) {
+                if (goal instanceof PathfinderGoalMobSkillSelector) {
                     return ((PathfinderGoalMobSkillSelector)goal).getActions();
                 }
             }
@@ -160,11 +160,11 @@ public class MobGoalManager extends URLClassLoader {
         File modDir = new File(InvasionPlugin.instance.getDataFolder(),"Actions");
         modDir.mkdirs();
         HashMap<String,File> actionFiles = new HashMap<String,File>();
-        for(String actionFileName : modDir.list()) {
-            if(actionFileName.contains(".jar")) {
+        for (String actionFileName : modDir.list()) {
+            if (actionFileName.contains(".jar")) {
                 File modFile = new File(modDir, actionFileName);
                 String name = actionFileName.toLowerCase().replace(".jar", "");
-                if(actionFiles.containsKey(name)) {
+                if (actionFiles.containsKey(name)) {
                     plugin.getLogger().log(Level.SEVERE, "A seperate mob action with action name " + name + " was already loaded!");
                 } else {
                     actionFiles.put(name, modFile);
@@ -187,7 +187,7 @@ public class MobGoalManager extends URLClassLoader {
                         BufferedReader reader = new BufferedReader(new InputStreamReader(jarFile.getInputStream(element)));
                         mainClasses = new LinkedList<String>();
                         String next = reader.readLine();
-                        while(next != null) {
+                        while (next != null) {
                             mainClasses.add(next.substring(12));
                             try {
                                 next = reader.readLine();
@@ -198,21 +198,21 @@ public class MobGoalManager extends URLClassLoader {
                         }
                     }
                 }
-                for(String toLoad: mainClasses) {
+                for (String toLoad: mainClasses) {
                     Class<?> clazz = Class.forName(toLoad, true, this);
-                    if(clazz.isAssignableFrom(MobAction.class)) {
+                    if (clazz.isAssignableFrom(MobAction.class)) {
                         Class<? extends MobAction> actionClass = clazz.asSubclass(MobAction.class);
                         Constructor<? extends MobAction> ctor = actionClass.getConstructor(new Class[] {InvasionPlugin.class});
                         MobAction action = ctor.newInstance(new Object[] {plugin});
                         plugin.getLogger().log(Level.INFO, "Action " + toLoad + " loaded successfully!");
-                        for(EntityType type : action.getMobTypes()) {
+                        for (EntityType type : action.getMobTypes()) {
                             addMobAction(type, action);
                         }
-                    } else if(clazz.isAssignableFrom(MobTargetSelectorAction.class)) {
+                    } else if (clazz.isAssignableFrom(MobTargetSelectorAction.class)) {
                         Class<? extends MobTargetSelectorAction> actionClass = clazz.asSubclass(MobTargetSelectorAction.class);
                         Constructor<? extends MobTargetSelectorAction> ctor = actionClass.getConstructor(new Class[] {});
                         MobTargetSelectorAction action = ctor.newInstance(new Object[] {});
-                        for(EntityType type : action.getMobTypes()) {
+                        for (EntityType type : action.getMobTypes()) {
                             addMobTargettingSelectorAction(type, action);
                         }
                         plugin.getLogger().log(Level.INFO, "Targetting Action " + toLoad + " loaded successfully!");

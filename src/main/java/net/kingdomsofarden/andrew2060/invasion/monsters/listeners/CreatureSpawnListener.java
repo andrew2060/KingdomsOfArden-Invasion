@@ -30,15 +30,15 @@ public class CreatureSpawnListener implements Listener {
     }
     @EventHandler(ignoreCancelled = true)
     public void spawnGiant(PlayerInteractEvent event) {
-        if(!event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
+        if (!event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
             return;
         }
-        if(event.getPlayer().getItemInHand().getType().equals(Material.FIRE)) {
+        if (event.getPlayer().getItemInHand().getType().equals(Material.FIRE)) {
             Location loc = event.getClickedBlock().getLocation().add(0,1,0);
             Giant toSpawn = loc.getWorld().spawn(loc, Giant.class);
             CreatureSpawnEvent spawnEvent = new CreatureSpawnEvent(toSpawn, SpawnReason.NATURAL);
             Bukkit.getPluginManager().callEvent(spawnEvent);
-            if(spawnEvent.isCancelled()) {
+            if (spawnEvent.isCancelled()) {
                 toSpawn.remove();
             }
         }
@@ -46,14 +46,14 @@ public class CreatureSpawnListener implements Listener {
     
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onCreatureSpawnRegisterCharacter(CreatureSpawnEvent event) {
-        if(event.getEntity() instanceof Creature) {
+        if (event.getEntity() instanceof Creature) {
             mobmanager.registerCharacter((Creature) event.getEntity());
         }
     }
     
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onCreatureSpawnModifyHealthDamage(CreatureSpawnEvent event) {
-        if(event.getEntity() instanceof HumanEntity) {
+        if (event.getEntity() instanceof HumanEntity) {
             return;
         }
         Location spawnLoc = event.getLocation();

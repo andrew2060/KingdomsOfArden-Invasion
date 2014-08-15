@@ -1,0 +1,158 @@
+Blaze:
+  replace: false
+  worlds:
+    all:
+      vanilla:
+      - GOLD_NUGGET 1 0.10
+      items:
+      - magical_essence 1-5 0.1
+      groups:
+      - soul_gems
+CaveSpider:
+  replace: false
+  worlds:
+    all:
+      vanilla:
+      - GOLD_NUGGET 1 0.25
+      items:
+      - magical_essence 1-5 0.1
+      groups:
+      - soul_gems
+Creeper:
+  replace: false
+  worlds:
+    all:
+      vanilla:
+      - TNT 1-2 0.10
+      - GOLD_NUGGET 1 0.30
+      items:
+      - magical_essence 1-5 0.1
+      groups:
+      - soul_gems
+PoweredCreeper:
+  replace: false
+  worlds:
+    all:
+      vanilla:
+      - TNT 2-4 0.50
+      - GOLD_NUGGET 5-10 1.00
+      items:
+      - magical_essence 1-5 1.00
+      groups:
+      - soul_gems
+EnderDragon:
+  replace: true
+  worlds:
+    all:
+      vanilla:
+      - GOLD_INGOT 640-1280 1.00
+      - DRAGON_EGG 1 1.00
+      items:
+      - magical_essence 512-1024 1.00
+      groups:
+      - soul_gems
+    empyria:
+      items:
+      - empyrian_soul_star 1 1.00
+    infernium:
+      items:
+      - infernal_soul_star 1 1.00
+Enderman:
+  replace: false
+  worlds:
+    all:
+      vanilla:
+      - GOLD_INGOT 1-2 0.5
+      items:
+      - magical_essence 1-5 0.20
+      groups:
+      - soul_gems
+Ghast:
+  replace: false
+  worlds:
+    all:
+      groups:
+      - soul_gems
+      vanilla:
+      - GOLD_INGOT 3-4 0.75
+      items:
+      - magical_essence 1-5 0.50
+Giant:
+  replace: true
+  worlds:
+    all:
+      vanilla:
+      - GOLD_INGOT 320-640 1.00
+      - ROTTEN_FLESH 256-512 1.00
+      items:
+      - magical_essence 256-512 1.00
+      groups:
+      - soul_gems
+PigZombie:
+  replace: true
+  worlds:
+    all:
+      vanilla:
+      - GOLD_NUGGET 2-4 0.10
+      items:
+      - magical_essence 1-5 0.01
+      groups:
+      - soul_gems
+Skeleton:
+  replace: true
+  worlds:
+    all:
+      vanilla:
+      - BONE 1-2 0.3
+      - GOLD_NUGGET 1-3 0.25
+      - ARROW 1-10 0.20
+      items:
+      - magical_essence 1-5 0.05
+      groups:
+      - soul_gems
+Spider:
+  replace: false
+  worlds:
+    all:
+      vanilla:
+      - WEB 1 0.30
+      - GOLD_NUGGET 1-3 0.25
+      items:
+      - magical_essence 1-5 0.05
+      groups:
+      - soul_gems
+VillagerGolem:
+  replace: true
+  worlds:
+    all:
+      vanilla:
+      - IRON_INGOT 3-5 0.05
+      - RED_ROSE 2 0.40
+      groups:
+      - soul_gems
+WitherBoss:
+  replace: true
+  worlds:
+    all:
+      vanilla:
+      - GOLD_INGOT 728-1456 1.00
+      items:
+      - magical_essence 384-768 1.00
+      groups:
+      - soul_gems
+    infernium:
+      items:
+      - infernal_soul_star 1 1.00
+
+Zombie:
+  replace: false
+  worlds:
+    all:
+      vanilla:
+      - ROTTEN_FLESH 1-3 0.3
+      - GOLD_NUGGET 1-2 0.25
+      groups:
+      - soul_gems
+      items:
+      - magical_essence 1-5 0.05
+

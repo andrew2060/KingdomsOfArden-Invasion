@@ -46,7 +46,7 @@ public class DimensionSpawner {
     
     public void tickSpawn() {
         SpawnEntry next = this.spawnQueue.poll();
-        for(int i = 0; i < next.amount; i++) {
+        for (int i = 0; i < next.amount; i++) {
             Location spawnLoc = this.location.clone().add(random.nextInt(16), random.nextInt(16), random.nextInt(16));
             spawnLoc.getWorld().spawnEntity(spawnLoc.getWorld().getHighestBlockAt(spawnLoc).getLocation().add(0,1,0), next.type);
         }
@@ -54,17 +54,17 @@ public class DimensionSpawner {
     
     public void tickHealth() {
         boolean close = false;
-        for(Player p : this.location.getWorld().getPlayers()) {
-            if(p.getLocation().distanceSquared(this.location) <= 256) {
+        for (Player p : this.location.getWorld().getPlayers()) {
+            if (p.getLocation().distanceSquared(this.location) <= 256) {
                 close = true;
                 break;
             }
         }
-        if(close) {
-            if(this.health != 1 && this.health != -1) {
+        if (close) {
+            if (this.health != 1 && this.health != -1) {
                 this.health -= 1;
-            } else if(this.health == -1) {
-                if(this.boss != null && this.boss.isDead()) {
+            } else if (this.health == -1) {
+                if (this.boss != null && this.boss.isDead()) {
                     this.location.getBlock().setType(Material.AIR);
                     this.location.getWorld().createExplosion(this.location, 0.0F, false);
                 }
@@ -73,11 +73,11 @@ public class DimensionSpawner {
                 
             }
         } else {
-            if(this.health == 1) {
+            if (this.health == 1) {
                 return;
             } else {
                 this.health += 2;
-                if(this.health > 1) {
+                if (this.health > 1) {
                     this.health = 1;
                 }
             }

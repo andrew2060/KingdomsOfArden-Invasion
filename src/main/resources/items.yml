@@ -1,0 +1,108 @@
+# Crafting Resources
+
+magical_essence:
+  material: EXP_BOTTLE
+  name: §3Essence of Magicka
+  lore:
+  - §7A bottle of mysterious magical essence
+
+#Weapons and weapon components
+
+empyrean_dragonslayer:
+  material: DIAMOND_SWORD
+  name: §3Empyrean Dragonslayer
+  modules:
+    ToolHandlerDesc: >
+      §7An empyrean sword design that originated during the|::|::|
+      §7ancient dragon wars, this particular sword is particularly|::|::|
+      §7adept at penetrating the thick armoring typical to dragons,|::|::|
+      §7and boasts quite a bit more damage than a standard sword.|::|::|
+      §7|::|::|
+      §7§oOn the day the last empyrean fell, the earth weeped,|::|::|
+      §7§ofor it was at the mercy of the dragons.|::|::|
+      §7
+    ToolHandlerDmg: "50.00:65.00"
+    ToolHandlerWeapon: "100.00:7c1293ee-1dc3-11e4-ac15-b2227cce2b54:979eb8a0-a621-11e3-a5e2-0800200c9a66:979eb8a0-a621-11e3-a5e2-0800200c9a66"
+infernal_soulshard:
+  material: DIAMOND_SWORD
+  name: §cInfernal Soulsapper
+  modules:
+    ToolHandlerDesc: >
+      §7Originating from the original incursion by infernal forces into|::|::|
+      §7the overworld, this particular sword is, like many other infernal|::|::|
+      §7designs, a corrupted variant of the venerable empyrian claymore.|::|::|
+      §7While less damaging than its empyrean counterpart, this|::|::|
+      §7particular sword seems to be well suited as a conduit|::|::|
+      §7for sapping the life-force of its victims|::|::|
+      §7|::|::|
+      §7§oSuch a waste, the blood that stains the ground a lovely red|::|::|
+      §7§oThe blood of our foes, after all, keeps this blade fed|::|::|
+      §7
+    ToolHandlerDmg: "30.00:35.00"
+    ToolHandlerWeapon: "100.00:7c1293ef-1dc3-11e4-ac15-b2227cce2b54:979eb8a0-a621-11e3-a5e2-0800200c9a66:979eb8a0-a621-11e3-a5e2-0800200c9a66"
+
+# Soul Gems and Stars
+
+empyrian_soul_star:
+  material: NETHER_STAR
+  name: §bEmpyrian Soul Gem
+  lore:
+  - §7A mysterious gem pulsating with energy from the realm of Empyria
+  - §7
+  - §7§oFor once you have tasted flight you will walk the earth
+  - §7§owith your eyes turned skywards, for there you have been,
+  - §7§oand there you will long to return.
+infernal_soul_star:
+  material: NETHER_STAR
+  name: §cInfernal Soul Star
+  lore:
+  - §7A mysterious gem that has been corrupted with dark energy
+  - §7
+  - §7§oBetter to reign in hell than to serve in heaven
+
+artifact_soul_gem:
+  material: EMERALD
+  name: §5Artifact Soul Gem
+  lore:
+  - §7Imbued with the spirits of ancients
+  - §7An otherworldly aura radiates from this gem
+  - 
+  - §7§oIn all things of nature there is something
+  - §7§oof the marvelous
+legendary_soul_gem:
+  material: EMERALD
+  name: §4Legendary Soul Gem
+  lore:
+  - §7A §4legendary §7tier soul is trapped within this gem
+master_soul_gem:
+  material: EMERALD
+  name: §cMaster Soul Gem
+  lore:
+  - §7A §cmaster §7tier soul is trapped within this gem
+major_soul_gem:
+  material: EMERALD
+  name: §6Major Soul Gem
+  lore:
+  - §7A §6major §7tier soul is trapped within this gem
+strong_soul_gem:
+  material: EMERALD
+  name: §2Strong Soul Gem
+  lore:
+  - §7A §2strong §7tier soul is trapped within this gem
+common_soul_gem:
+  material: EMERALD
+  name: §fCommon Soul Gem
+  lore:
+  - §7A §fcommon §7tier soul is trapped within this gem
+weak_soul_gem:
+  material: EMERALD
+  name: §bWeak Soul Gem
+  lore:
+  - §7A §bweak §7tier soul is trapped within this gem
+petty_soul_gem:
+  material: EMERALD
+  name: §3Petty Soul Gem
+  lore:
+  - §7A §3petty §7tier soul is trapped within this gem
+
+

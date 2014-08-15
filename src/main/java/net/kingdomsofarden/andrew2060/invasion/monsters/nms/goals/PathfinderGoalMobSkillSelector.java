@@ -44,8 +44,8 @@ public class PathfinderGoalMobSkillSelector extends PathfinderGoalDeobfuscated {
     }
     
     @Override
-    public boolean canAddGoalToQueue() {  
-        if(System.currentTimeMillis() - this.lastSkillExecution < this.bossSkillCooldown) {
+    public boolean shouldStart() {
+        if (System.currentTimeMillis() - this.lastSkillExecution < this.bossSkillCooldown) {
             return false;
         } else if (mob.getTarget() == null) {
             return false;
@@ -59,10 +59,10 @@ public class PathfinderGoalMobSkillSelector extends PathfinderGoalDeobfuscated {
     
     //Selects an action to execute
     @Override
-    public boolean canTickGoal() {
-        if(this.perform == null) {
+    public boolean shouldContinue() {
+        if (this.perform == null) {
             return false;
-        } else if(!this.perform.checkUsable(this.mob)) {
+        } else if (!this.perform.checkUsable(this.mob)) {
             this.failedLaunchTimeout.put(this.perform, System.currentTimeMillis());
             return false;
         }
@@ -70,7 +70,7 @@ public class PathfinderGoalMobSkillSelector extends PathfinderGoalDeobfuscated {
     }
     
     @Override
-    public void tickGoal() {
+    public void finish() {
         this.perform.tick(mob);
         this.lastSkillExecution = System.currentTimeMillis();
     }
@@ -80,15 +80,15 @@ public class PathfinderGoalMobSkillSelector extends PathfinderGoalDeobfuscated {
     }
 
     @Override
-    public void setupGoal() {
+    public void start() {
         this.perform = this.allActions.poll();
         this.allActions.add(this.perform);
-        if(this.failedLaunchTimeout.getIfPresent(this.perform) != null) {
-            if(System.currentTimeMillis() <= this.failedLaunchTimeout.getUnchecked(this.perform)) {
+        if (this.failedLaunchTimeout.getIfPresent(this.perform) != null) {
+            if (System.currentTimeMillis() <= this.failedLaunchTimeout.getUnchecked(this.perform)) {
                 return;
             }
         } 
-        if(randGen.nextDouble() <= perform.getQueueChance()) {
+        if (randGen.nextDouble() <= perform.getQueueChance()) {
             return;
         } else {
             this.perform = null;

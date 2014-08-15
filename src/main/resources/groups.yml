@@ -1,0 +1,32 @@
+soul_gems:
+  vanilla:
+  - GOLD_INGOT 1 1.00 1 true
+  - GOLD_INGOT 1-2 1.00 2 true
+  - GOLD_INGOT 1-3 1.00 3 true
+  - GOLD_INGOT 1-4 1.00 4 true
+  - GOLD_INGOT 1-5 1.00 5 true
+  - GOLD_INGOT 1-6 1.00 6 true
+  - GOLD_INGOT 2-7 1.00 7 true
+  - GOLD_INGOT 3-8 1.00 8 true
+  - GOLD_INGOT 4-9 1.00 9 true
+  - GOLD_INGOT 5-10 1.00 10 true
+  - GOLD_INGOT 6-11 1.00 11 true
+  - GOLD_INGOT 7-12 1.00 12 true
+  - GOLD_INGOT 8-13 1.00 13 true
+  - GOLD_INGOT 9-14 1.00 14 true
+  - GOLD_INGOT 10-15 1.00 15 true
+  - GOLD_INGOT 11-16 1.00 16 true
+  - GOLD_INGOT 12-17 1.00 17 true
+  - GOLD_INGOT 13-18 1.00 18 true
+  - GOLD_INGOT 14-19 1.00 19 true
+  - GOLD_INGOT 15-20 1.00 20 true
+  - GOLD_INGOT 20-21 1.00 21 true
+  - GOLD_INGOT 20-40 1.00 21+ true
+  items:
+  - petty_soul_gem 1-2 0.30 1-3 true
+  - weak_soul_gem 1-2 0.30 4-6 true
+  - common_soul_gem 1-2 0.30 7-9 true
+  - strong_soul_gem 1-2 0.30 10-12 true
+  - major_soul_gem 1-2 0.30 13-19 true
+  - legendary_soul_gem 1-2 0.30 20-21 true
+  - artifact_soul_gem 1-2 0.30 21+ true

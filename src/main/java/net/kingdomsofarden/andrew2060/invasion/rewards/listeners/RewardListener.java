@@ -210,25 +210,25 @@ public class RewardListener {
             mod = -exp;
         }
         
-        String rank = "§8newbie§7";
-        if(dLevel > 0 && dLevel <= 20) {
-            rank = "§8newbie§7";
-        } else if(dLevel > 20 && dLevel <= 30) {
-            rank = "§9apprentice§7";
-        } else if(dLevel > 30 && dLevel <= 40) {
-            rank = "§3seasoned§7";
-        } else if(dLevel > 40 && dLevel <= 50) {
-            rank = "§2veteran§7";
-        } else if(dLevel > 50 && dLevel < 65) {
-            rank = "§6elite§7";
-        } else if(dLevel >= 65 && dLevel <75) {
-            rank = "§5legendary§7";
-        } else if(dLevel == 75) {
-            rank = "§4master§7";
+        String rank = "Â§8newbieÂ§7";
+        if (dLevel > 0 && dLevel <= 20) {
+            rank = "Â§8newbieÂ§7";
+        } else if (dLevel > 20 && dLevel <= 30) {
+            rank = "Â§9apprenticeÂ§7";
+        } else if (dLevel > 30 && dLevel <= 40) {
+            rank = "Â§3seasonedÂ§7";
+        } else if (dLevel > 40 && dLevel <= 50) {
+            rank = "Â§2veteranÂ§7";
+        } else if (dLevel > 50 && dLevel < 65) {
+            rank = "Â§6eliteÂ§7";
+        } else if (dLevel >= 65 && dLevel <75) {
+            rank = "Â§5legendaryÂ§7";
+        } else if (dLevel == 75) {
+            rank = "Â§4masterÂ§7";
         }
         DecimalFormat dF = new DecimalFormat("#0.##");
         DecimalFormat signed = new DecimalFormat("+#0.## ; -#0.##");
-        attacker.getPlayer().sendMessage("§7You were awarded " + dF.format(exp * proportion) 
+        attacker.getPlayer().sendMessage("Â§7You were awarded " + dF.format(exp * proportion)
                 + "(" + signed.format(mod * proportion) + " due to level difference) for killing a " + rank + dClass.getName() 
                 + " (" + dF.format(proportion * 100) + "% of total damage)");
         attacker.addExp(exp + mod, aClass, defender.getPlayer().getLocation());

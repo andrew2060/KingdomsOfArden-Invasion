@@ -73,18 +73,18 @@ public class CreatureScaleListener implements Listener {
             int armorSum = 0;
             for (ItemStack item : m.getEquipment().getArmorContents()) {
 
-                switch(item.getType()) {
+                switch (item.getType()) {
                 case DIAMOND_HELMET:
-                    armorSum += 3;
+                    armorSum += 2;
                     break; 
                 case DIAMOND_CHESTPLATE:
-                    armorSum += 8;
+                    armorSum += 5;
                     break;
                 case DIAMOND_LEGGINGS:
-                    armorSum += 6;
+                    armorSum += 4;
                     break;
                 case DIAMOND_BOOTS:
-                    armorSum += 3;
+                    armorSum += 1;
                     break;
                 case CHAINMAIL_HELMET: 
                     armorSum += 2;
@@ -144,15 +144,15 @@ public class CreatureScaleListener implements Listener {
 
     @EventHandler(priority=EventPriority.HIGHEST, ignoreCancelled = true) 
     public void onMobDamage(WeaponDamageEvent event) {
-        if(!(event.getDamager() instanceof Hero)) {
+        if (!(event.getDamager() instanceof Hero)) {
             LivingEntity ent = event.getDamager().getEntity();
-            if(!ent.hasMetadata("mobscaling.exponent")) {
-                if(!(ent instanceof Monster || ent instanceof Ghast || ent instanceof Slime || ent instanceof Golem || ent instanceof EnderDragon)) {
+            if (!ent.hasMetadata("mobscaling.exponent")) {
+                if (!(ent instanceof Monster || ent instanceof Ghast || ent instanceof Slime || ent instanceof Golem || ent instanceof EnderDragon)) {
                     return;
                 }
                 double exponent = (Math.log10(ent.getMaxHealth()/getDefaultMaxHealth(ent))/Math.log10(Config.GROWTH_RATE_HEALTH));
                 int tier = Math.round(Math.round(exponent));
-                if(tier == 0) {
+                if (tier == 0) {
                     return;
                 }
                 ent.setMetadata("mobscaling.tier", new FixedMetadataValue(plugin, tier));
@@ -168,10 +168,10 @@ public class CreatureScaleListener implements Listener {
     @EventHandler(priority=EventPriority.MONITOR, ignoreCancelled = true)
     public void onMonsterSpawn(CreatureSpawnEvent event) {
         LivingEntity entity = event.getEntity();
-        if(!(entity instanceof Monster || entity instanceof Ghast || entity instanceof Slime || entity instanceof Golem || entity instanceof EnderDragon)) {
+        if (!(entity instanceof Monster || entity instanceof Ghast || entity instanceof Slime || entity instanceof Golem || entity instanceof EnderDragon)) {
             return;
         }
-        if(entity.hasMetadata("mobscaling.ignore")) {
+        if (entity.hasMetadata("mobscaling.ignore")) {
             return;
         }
         EntityType type = entity.getType();
@@ -179,7 +179,7 @@ public class CreatureScaleListener implements Listener {
         Location origin = new Location(spawnLoc.getWorld(), 0, 64, 0);
         double modifier = spawnLoc.distanceSquared(origin);
         double exponent = 0.00;
-        if(spawnLoc.getWorld().getEnvironment().equals(Environment.NETHER)) {
+        if (spawnLoc.getWorld().getEnvironment().equals(Environment.NETHER)) {
             exponent = Math.sqrt(modifier/Config.GROWTH_PER_SQUARED_NETHER);
             exponent += 0.5;
         } else {
@@ -187,19 +187,19 @@ public class CreatureScaleListener implements Listener {
         }
         boolean elite = rand.nextDouble() <= Config.ELITE_MOB_CHANCE;
         int tier = (int) Math.round(exponent);
-        if(entity.getCustomName() == null && (entity instanceof Monster || entity instanceof Ghast)) {
+        if (entity.getCustomName() == null && (entity instanceof Monster || entity instanceof Ghast)) {
             entity.setCustomName(getCustomName(type,tier,elite));  
-            if(elite) {
+            if (elite) {
                 entity.setCustomNameVisible(true);
             }
         }
-        if(exponent <= 1 && !elite) {
+        if (exponent <= 1 && !elite) {
             return;
         }
-        if(exponent < 1) {
+        if (exponent < 1) {
             exponent = 1;
         }
-        if(elite) {
+        if (elite) {
             exponent += 0.5;
             tier += 1;
         }
@@ -207,25 +207,25 @@ public class CreatureScaleListener implements Listener {
         double health = entity.getMaxHealth() * multiplicand;
         entity.setMaxHealth(health);
         entity.setHealth(entity.getMaxHealth());
-        if(type == EntityType.ZOMBIE || type == EntityType.PIG_ZOMBIE) {
-            switch(tier) {
+        if (type == EntityType.ZOMBIE || type == EntityType.PIG_ZOMBIE) {
+            switch (tier) {
 
             case 0: {
-                if(rand.nextDouble() < 0.3) {
+                if (rand.nextDouble() < 0.3) {
                     entity.getEquipment().setArmorContents(leather);
                     entity.getEquipment().setItemInHand(new ItemStack(Material.WOOD_SWORD));
                 }
                 break;
             }
             case 1: {
-                if(rand.nextDouble() < 0.3) {
+                if (rand.nextDouble() < 0.3) {
                     entity.getEquipment().setArmorContents(leather);
                     entity.getEquipment().setItemInHand(new ItemStack(Material.WOOD_SWORD));
                 }
                 break;
             }
             case 2: {
-                if(rand.nextDouble() < 0.3) {
+                if (rand.nextDouble() < 0.3) {
                     entity.getEquipment().setArmorContents(gold);
                     entity.getEquipment().setItemInHand(new ItemStack(Material.STONE_SWORD));
                 } else {
@@ -235,7 +235,7 @@ public class CreatureScaleListener implements Listener {
                 break;
             }
             case 3: {
-                if(rand.nextDouble() < 0.3) {
+                if (rand.nextDouble() < 0.3) {
                     entity.getEquipment().setArmorContents(iron);
                     entity.getEquipment().setItemInHand(new ItemStack(Material.IRON_SWORD));
                 } else {
@@ -245,7 +245,7 @@ public class CreatureScaleListener implements Listener {
                 break;
             }
             case 4: {
-                if(rand.nextDouble() < 0.3) {
+                if (rand.nextDouble() < 0.3) {
                     entity.getEquipment().setArmorContents(diamond);
                     entity.getEquipment().setItemInHand(new ItemStack(Material.DIAMOND_SWORD));
                 } else {
@@ -255,7 +255,7 @@ public class CreatureScaleListener implements Listener {
                 break;
             }
             case 5: {
-                if(rand.nextDouble() < 0.3) {
+                if (rand.nextDouble() < 0.3) {
                     entity.getEquipment().setArmorContents(diamond);
                     entity.getEquipment().setItemInHand(new ItemStack(Material.DIAMOND_SWORD));
                 } else {
@@ -277,30 +277,30 @@ public class CreatureScaleListener implements Listener {
 
             }
         }
-        if(type == EntityType.SKELETON) {
-            switch(tier) {
+        if (type == EntityType.SKELETON) {
+            switch (tier) {
 
             case 0: {
-                if(rand.nextDouble() < 0.1) {
+                if (rand.nextDouble() < 0.1) {
                     entity.getEquipment().setArmorContents(leather);
                 }
                 break;
             }
             case 1: {
-                if(rand.nextDouble() < 0.3) {
+                if (rand.nextDouble() < 0.3) {
                     entity.getEquipment().setArmorContents(leather);
                 }
                 break;
             }
             case 2: {
-                if(rand.nextDouble() < 0.3) {
+                if (rand.nextDouble() < 0.3) {
                     entity.getEquipment().setArmorContents(leather);
                 }
 
                 break;
             }
             case 3: {
-                if(rand.nextDouble() < 0.3) {
+                if (rand.nextDouble() < 0.3) {
                     entity.getEquipment().setArmorContents(leather);
                 } else {
                     entity.getEquipment().setArmorContents(gold);
@@ -309,7 +309,7 @@ public class CreatureScaleListener implements Listener {
                 break;
             }
             case 4: {
-                if(rand.nextDouble() < 0.3) {
+                if (rand.nextDouble() < 0.3) {
                     entity.getEquipment().setArmorContents(gold);
                 } else {
                     entity.getEquipment().setArmorContents(leather);
@@ -318,7 +318,7 @@ public class CreatureScaleListener implements Listener {
                 break;
             }
             case 5: {
-                if(rand.nextDouble() < 0.3) {
+                if (rand.nextDouble() < 0.3) {
                     entity.getEquipment().setArmorContents(gold);
                 } else {
                     entity.getEquipment().setArmorContents(chainmail);
@@ -327,7 +327,7 @@ public class CreatureScaleListener implements Listener {
                 break;
             }
             case 6: {
-                if(rand.nextDouble() < 0.3) {
+                if (rand.nextDouble() < 0.3) {
                     entity.getEquipment().setArmorContents(chainmail);
                 } else {
                     entity.getEquipment().setArmorContents(gold);
@@ -343,7 +343,7 @@ public class CreatureScaleListener implements Listener {
             }
         }
         float dropchance = 0.01F;
-        if(elite) {
+        if (elite) {
             dropchance += 0.5;
         }
         entity.getEquipment().setHelmetDropChance(dropchance);
@@ -361,11 +361,11 @@ public class CreatureScaleListener implements Listener {
     private String getCustomName(EntityType type, int tier, boolean crit) {
 
         StringBuilder name = new StringBuilder();
-        if(crit) {
+        if (crit) {
             name.append(ChatColor.DARK_RED + "Arch ");
         }
 
-        if(tier <= Config.MOB_NAMES.length && tier > 0) {
+        if (tier <= Config.MOB_NAMES.length && tier > 0) {
             name.append(Config.MOB_NAMES[tier - 1]);
         } else if (tier > Config.MOB_NAMES.length) {
             name.append(Config.MOB_NAMES[Config.MOB_NAMES.length - 1]);
@@ -375,7 +375,7 @@ public class CreatureScaleListener implements Listener {
 
         name.append(" ");
 
-        switch(type) {
+        switch (type) {
 
         case BLAZE:
             name.append("Jotunn");

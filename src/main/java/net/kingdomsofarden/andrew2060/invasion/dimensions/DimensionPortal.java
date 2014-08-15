@@ -40,7 +40,7 @@ public class DimensionPortal {
         File storageFolder = plugin.getDataFolder();
         storageFolder.mkdir();
         File file = new File(storageFolder.getPath() + "/" + id.toString());
-        if(!file.exists()) {
+        if (!file.exists()) {
             return null;
         }
         try {
@@ -51,7 +51,7 @@ public class DimensionPortal {
             String[] locParse = parsed[0].split(":");
             Location portalFrom = new Location(plugin.getServer().getWorld(locParse[0]), Double.valueOf(locParse[0]), Double.valueOf(locParse[1]), Double.valueOf(locParse[2]));
             Location portalTo = null;
-            if(!parsed[1].equals("null")) {
+            if (!parsed[1].equals("null")) {
                 locParse = parsed[1].split(":");
                 portalTo = new Location(plugin.getServer().getWorld(locParse[0]), Double.valueOf(locParse[0]), Double.valueOf(locParse[1]), Double.valueOf(locParse[2]));
             }
@@ -74,8 +74,8 @@ public class DimensionPortal {
         this.id = id;
         World world = from.getWorld();
         boolean match = false;
-        while(!match) { //TODO: Potentially Dangerous
-            switch(world.getBlockAt(chunkCenter).getType()) {
+        while (!match) { //TODO: Potentially Dangerous
+            switch (world.getBlockAt(chunkCenter).getType()) {
 
             case STONE:
             case GRASS:
@@ -106,7 +106,7 @@ public class DimensionPortal {
     public void registerFactionClaim(boolean createNew) {
         FactionColl forWorld = FactionColls.get().getForWorld(this.nexusCenter.getWorld().getName());
         Faction fact = null;
-        if(!forWorld.containsId(this.id)) {
+        if (!forWorld.containsId(this.id)) {
             fact = forWorld.create();
             fact.setName("Dominion Rift");
             fact.setDescription("Tier " + difficulty + " Dominion Invasion Nexus");

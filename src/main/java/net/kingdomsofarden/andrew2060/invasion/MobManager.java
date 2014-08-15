@@ -17,17 +17,17 @@ public class MobManager {
     }
 
     public void registerCharacter(Creature creature) {
-        if(characters.containsKey(creature.getUniqueId())) {
+        if (characters.containsKey(creature.getUniqueId())) {
             Creature entity = characters.get(creature);
-            if(!entity.equals(creature)) {
+            if (!entity.equals(creature)) {
                 entity.remove();
-                if(goalManager.registerGoals(creature)) {
+                if (goalManager.registerGoals(creature)) {
                     characters.put(creature.getUniqueId(), creature);
                 }
             } else {
             }
         } else {
-            if(goalManager.registerGoals(creature)) {
+            if (goalManager.registerGoals(creature)) {
                 characters.put(creature.getUniqueId(), creature);
             }
         }

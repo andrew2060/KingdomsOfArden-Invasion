@@ -26,9 +26,9 @@ public class CreatureDensityListener implements Listener {
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onMonsterDamage(CharacterDamageEvent event) {
         Monster m = null;
-        if(event.getEntity() instanceof org.bukkit.entity.Monster) {
+        if (event.getEntity() instanceof org.bukkit.entity.Monster) {
             m = heroes.getCharacterManager().getMonster((LivingEntity) event.getEntity());
-            if(m.getSpawnReason() != SpawnReason.SPAWNER) {
+            if (m.getSpawnReason() != SpawnReason.SPAWNER) {
                 return;
             }
             
@@ -36,10 +36,10 @@ public class CreatureDensityListener implements Listener {
             return;
         }
         int limit = 10;
-        for(Entity e : event.getEntity().getNearbyEntities(2, 2, 2)) {
-            if(e.getType() == m.getEntity().getType()) {
+        for (Entity e : event.getEntity().getNearbyEntities(2, 2, 2)) {
+            if (e.getType() == m.getEntity().getType()) {
                 limit--;
-                if(limit < 0) {
+                if (limit < 0) {
                     limit = 0;
                     e.remove();
                 }
@@ -52,15 +52,15 @@ public class CreatureDensityListener implements Listener {
     public void onChunkUnload(ChunkUnloadEvent event) {
         Chunk c = event.getChunk();
         int max = 10;
-        for(Entity e : c.getEntities()) {
-            switch(e.getType()) {
+        for (Entity e : c.getEntities()) {
+            switch (e.getType()) {
             
             case COW:
             case PIG:
             case CHICKEN:
             case SHEEP: {
                 max--;
-                if(max < 0) {
+                if (max < 0) {
                     max = 0;
                     e.remove();
                 }

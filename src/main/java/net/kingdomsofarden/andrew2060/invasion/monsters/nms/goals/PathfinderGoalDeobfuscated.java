@@ -12,34 +12,34 @@ public abstract class PathfinderGoalDeobfuscated extends PathfinderGoal {
 
     @Override
     public final boolean a() {
-        return canAddGoalToQueue();
+        return shouldStart();
     }
     
     @Override
     public final boolean b() {
-        return canTickGoal();
+        return shouldContinue();
     }
     
     @Override
     public final void c() {
-        setupGoal();
+        start();
     }
     
     @Override
     public final void d() {
-        tickGoal();
+        finish();
     }
     
     @Override
     public final void e() {
-        doMobMovement();
+        tick();
     }
     
-    public abstract boolean canAddGoalToQueue();
-    public abstract boolean canTickGoal();
-    public abstract void setupGoal();
-    public abstract void tickGoal();
-    public void doMobMovement() {}
+    public abstract boolean shouldStart();
+    public abstract boolean shouldContinue();
+    public abstract void start();
+    public abstract void finish();
+    public void tick() {}
     
     
 }

@@ -15,7 +15,7 @@ public class TrackerValue extends LinkedList<DamageInfo> {
             @Override
             public void run() {
                 DamageInfo val = peekFirst();
-                if(val != null && System.currentTimeMillis() - val.getApplyTime() > 30000) { // Newest entry > 30 seconds old
+                if (val != null && System.currentTimeMillis() - val.getApplyTime() > 30000) { // Newest entry > 30 seconds old
                     //Purge
                     clear();
                 }
@@ -27,18 +27,18 @@ public class TrackerValue extends LinkedList<DamageInfo> {
     public double getTotalDamage() {
         this.clean();
         double damage = 0;
-        for(DamageInfo info : this) {
+        for (DamageInfo info : this) {
             damage += info.getDamage();
         }
         return damage;
     }
 
     private void clean() {
-        if(this.isEmpty()) {
+        if (this.isEmpty()) {
             return;
         } else {
             DamageInfo val = peekFirst();
-            if(System.currentTimeMillis() - val.getApplyTime() > 30000) {
+            if (System.currentTimeMillis() - val.getApplyTime() > 30000) {
                 this.clear();
             }
         }

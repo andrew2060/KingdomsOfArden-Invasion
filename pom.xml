@@ -45,6 +45,11 @@
 			<artifactId>spigot</artifactId>
 			<version>1.7.10-R0.1-SNAPSHOT</version>
 		</dependency>
+        <dependency>
+            <groupId>net.kingdomsofarden</groupId>
+            <artifactId>Crafty</artifactId>
+            <version>0.0.2-SNAPSHOT</version>
+        </dependency>
 		<dependency>
 			<groupId>com.onarandombox.multiversecore</groupId>
 			<artifactId>Multiverse-Core</artifactId>

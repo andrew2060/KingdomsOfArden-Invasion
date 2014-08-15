@@ -43,9 +43,9 @@ public class InvasionSettings {
         
         this.blocksPerScaleMultiplier = new HashMap<World,Long>();
         
-        for(String s : config.getConfigurationSection("mobs.scalePerXBlocks").getValues(false).keySet()) {
+        for (String s : config.getConfigurationSection("mobs.scalePerXBlocks").getValues(false).keySet()) {
             World w = Bukkit.getServer().getWorld(s);
-            if(w == null) {
+            if (w == null) {
                 this.plugin.getLogger().log(Level.SEVERE, "Configuration Error: World " + s + " not found!");
                 continue;
             } else {

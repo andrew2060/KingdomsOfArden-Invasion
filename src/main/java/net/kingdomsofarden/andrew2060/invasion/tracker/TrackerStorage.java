@@ -31,7 +31,7 @@ public class TrackerStorage extends HashMap<String,TrackerValue> {
                 try {
                     UUID id = UUID.fromString(key);
                     double damage = this.get(key).getTotalDamage();
-                    if(damage > 0) {
+                    if (damage > 0) {
                         map.put(id, damage);
                     }
                 } catch (IllegalArgumentException e) {}

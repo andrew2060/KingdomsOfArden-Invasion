@@ -22,10 +22,10 @@ public class PathfinderGoalMobSkillTargetting extends PathfinderGoalTargetDeobfu
     
     @Override
     public void setupGoal() {
-        for(MobTargetSelectorAction targettingAction : targettingActions) {
-            if(targettingAction.canDetermineTarget(creature)) {
+        for (MobTargetSelectorAction targettingAction : targettingActions) {
+            if (targettingAction.canDetermineTarget(creature)) {
                 LivingEntity target = targettingAction.determineTarget(creature);
-                if(target != null) {
+                if (target != null) {
                     creature.setTarget(target);
                     break;
                 } else {

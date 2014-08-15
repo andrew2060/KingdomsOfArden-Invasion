@@ -40,7 +40,7 @@ public abstract class MobTargetSelectorAction {
     
     @SafeVarargs
     public final void setReplaces(Class<? extends PathfinderGoal>... replaces) {
-        for(Class<? extends PathfinderGoal> toAdd : replaces) {
+        for (Class<? extends PathfinderGoal> toAdd : replaces) {
             this.replaces.add(toAdd);
         }
     }
