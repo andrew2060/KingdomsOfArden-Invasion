@@ -134,7 +134,7 @@ public class RewardListener implements Listener {
                     }
                 }
                 if (!skip) {
-                    if (storage.isDroppable() && !(event.getEntity() instanceof Player)) {
+                    if (storage.isDroppable() && !player) {
                         int tier = 1;
                         boolean elite = false;
                         if (lE.hasMetadata("mobscaling.tier") && lE.hasMetadata("mobscaling.elite") ) {
@@ -151,7 +151,7 @@ public class RewardListener implements Listener {
                         this.plugin.getDropHandler().setDrops(lE.getType(),
                                 lE.getLocation().getWorld().getUID(), tier, elite, event.getDrops());
                     } else {
-                        if (!(event.getEntity() instanceof Player)) {
+                        if (!player) {
                             event.getDrops().clear();
                         }
                     }
@@ -182,7 +182,7 @@ public class RewardListener implements Listener {
                 }
             }
         } else {
-            if (!(event.getEntity() instanceof Player)) {
+            if (!player) {
                 event.getDrops().clear();
             }
         }
