@@ -1,22 +1,20 @@
-package net.kingdomsofarden.andrew2060.invasion.rewards.listeners;
+package net.kingdomsofarden.andrew2060.invasion.listeners;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
+import com.herocraftonline.heroes.listeners.HEntityListener;
 import net.kingdomsofarden.andrew2060.invasion.InvasionPlugin;
+import net.kingdomsofarden.andrew2060.invasion.api.IInvasionMob;
 import net.kingdomsofarden.andrew2060.invasion.tracker.TrackerStorage;
 import net.kingdomsofarden.andrew2060.invasion.util.Config;
 import net.kingdomsofarden.andrew2060.invasion.util.Constants;
 
+import net.kingdomsofarden.andrew2060.invasion.util.MonsterUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -25,12 +23,12 @@ import org.bukkit.entity.Skeleton;
 import org.bukkit.entity.Tameable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.inventory.ItemStack;
 
 import com.herocraftonline.heroes.Heroes;
 import com.herocraftonline.heroes.api.events.HeroKillCharacterEvent;
@@ -47,8 +45,9 @@ import com.herocraftonline.heroes.characters.effects.common.CombustEffect;
 import com.herocraftonline.heroes.characters.effects.common.SummonEffect;
 import com.herocraftonline.heroes.util.Properties;
 import com.herocraftonline.heroes.util.Util;
+import org.bukkit.plugin.RegisteredListener;
 
-public class RewardListener {
+public class RewardListener implements Listener {
   
     private Method getEntityHealth;
     private InvasionPlugin plugin;
@@ -61,7 +60,12 @@ public class RewardListener {
         this.plugin = plugin;
         this.heroesPlugin = Heroes.getInstance();
         this.heroesConf = Heroes.properties;
-        this.arenaWorld = Bukkit.getWorld("Arenas").getUID();
+        if (Bukkit.getWorld("Arenas") != null) {
+            this.arenaWorld = Bukkit.getWorld("Arenas").getUID();
+        } else {
+            this.arenaWorld = null;
+        }
+
         try {
             this.getEntityHealth = CharacterDamageManager.class.getDeclaredMethod("getEntityMaxHealth", new Class[] {LivingEntity.class});
         } catch (NoSuchMethodException | SecurityException e) {
@@ -69,6 +73,15 @@ public class RewardListener {
         }
         this.getEntityHealth.setAccessible(true);
         this.log_conv = Math.log10(Config.GROWTH_RATE_HEALTH);
+        RegisteredListener temp = null;
+        for (RegisteredListener l : EntityDeathEvent.getHandlerList().getRegisteredListeners()) {
+            if (l.getListener().getClass().equals(HEntityListener.class)) {
+                temp = l;
+            }
+        }
+        if (temp != null) {
+            EntityDeathEvent.getHandlerList().unregister(temp);
+        }
     }
 
     @EventHandler(priority=EventPriority.HIGHEST)
@@ -121,6 +134,27 @@ public class RewardListener {
                     }
                 }
                 if (!skip) {
+                    if (storage.isDroppable() && !(event.getEntity() instanceof Player)) {
+                        int tier = 1;
+                        boolean elite = false;
+                        if (lE.hasMetadata("mobscaling.tier") && lE.hasMetadata("mobscaling.elite") ) {
+                            tier = lE.getMetadata("mobscaling.tier").get(0).asInt();
+                            elite = lE.getMetadata("mobscaling.elite").get(0).asBoolean();
+                        } else if (MonsterUtil.getInvasionMob(lE) != null) {
+                            IInvasionMob mob = MonsterUtil.getInvasionMob(lE);
+                            tier = mob.getTier();
+                            elite = mob.getElite();
+                        } else {
+                            tier = (int) Math.round(Math.log10(lE.getMaxHealth()
+                                    /getDefaultMaxHealth(lE))/this.log_conv);
+                        }
+                        this.plugin.getDropHandler().setDrops(lE.getType(),
+                                lE.getLocation().getWorld().getUID(), tier, elite, event.getDrops());
+                    } else {
+                        if (!(event.getEntity() instanceof Player)) {
+                            event.getDrops().clear();
+                        }
+                    }
                     HashMap<UUID,Double> contrib = storage.getContributingPlayers();
                     for (UUID id : contrib.keySet()) {
                         Player p = plugin.getServer().getPlayer(id);
@@ -146,6 +180,10 @@ public class RewardListener {
                         }
                     }
                 }
+            }
+        } else {
+            if (!(event.getEntity() instanceof Player)) {
+                event.getDrops().clear();
             }
         }
         
@@ -202,7 +240,7 @@ public class RewardListener {
         if (defender.getPlayer().getWorld().getUID().equals(this.arenaWorld)) {
             exp *= 0.5;
             mod *= 0.5;
-            attacker.getPlayer().sendMessage(ChatColor.GRAY + "50% exp penalty was applied due to death being" 
+            attacker.getPlayer().sendMessage(ChatColor.GRAY + "50% exp penalty was applied due to kill being"
                     + " in an arena");
         }
         
@@ -229,8 +267,8 @@ public class RewardListener {
         DecimalFormat dF = new DecimalFormat("#0.##");
         DecimalFormat signed = new DecimalFormat("+#0.## ; -#0.##");
         attacker.getPlayer().sendMessage("§7You were awarded " + dF.format(exp * proportion)
-                + "(" + signed.format(mod * proportion) + " due to level difference) for killing a " + rank + dClass.getName() 
-                + " (" + dF.format(proportion * 100) + "% of total damage)");
+                + "(" + signed.format(mod * proportion) + " due to level difference) for killing a " + rank
+                + dClass.getName() + " (" + dF.format(proportion * 100) + "% of total damage)");
         attacker.addExp(exp + mod, aClass, defender.getPlayer().getLocation());
         return ;
     }
@@ -255,16 +293,6 @@ public class RewardListener {
                 | InvocationTargetException e) {
             e.printStackTrace();
             return entity.getMaxHealth();
-        }
-    }
-
-    private void processDrops(LivingEntity defender, int tier) {
-        Location deathLoc = defender.getLocation();
-        World world = deathLoc.getWorld();
-        List<ItemStack> loot = new ArrayList<ItemStack>(10);
-        //TODO: Add loot table here
-        for (ItemStack lootItem : loot) {
-            world.dropItemNaturally(deathLoc, lootItem);
         }
     }
 
@@ -304,6 +332,11 @@ public class RewardListener {
             final CharacterTemplate combusted = this.heroesPlugin.getCharacterManager().getCharacter((LivingEntity) event.getEntity());
             if (combusted.hasEffect("Combust")) { // Handle Combust Effect for kill credit
                 return ((CombustEffect) combusted.getEffect("Combust")).getApplier();
+            }
+        } else if ((event.getCause() == DamageCause.POISON) && (event.getEntity() instanceof LivingEntity)) {
+            final CharacterTemplate poisoned = this.heroesPlugin.getCharacterManager().getCharacter((LivingEntity) event.getEntity());
+            if (poisoned.hasEffect("Poisoned")) {
+                // TODO: Poison
             }
         }
         return null;
