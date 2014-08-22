@@ -82,15 +82,15 @@ public class DropHandler {
                     lore = null;
                 }
                 if (lore != null && itemSection.isConfigurationSection("modules")) {
-                    this.plugin.getLogger().log(Level.WARNING, "There are both lore and modules defined, lore will get" +
-                            "overridden for item " + itemName);
+                    this.plugin.getLogger().log(Level.WARNING, "There are both lore and modules defined, lore will get "
+                            + "overridden for item " + itemName);
                 }
                 ConfigurationSection moduleSection = itemSection.getConfigurationSection("modules");
                 Map<String,String> modules = null;
                 if (moduleSection != null) {
                     modules = new HashMap<String,String>();
                     for (String module : moduleSection.getKeys(false)) {
-                        String data = moduleSection.getString(module);
+                        String data = moduleSection.getString(module).replace("\\r?\\n","");
                         modules.put(module, data);
                     }
                 }

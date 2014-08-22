@@ -7,6 +7,7 @@ import net.kingdomsofarden.andrew2060.invasion.monsters.nms.entities.projectiles
 import net.kingdomsofarden.andrew2060.invasion.monsters.nms.entities.projectiles.EntityGiantWitherSkull;
 
 import net.kingdomsofarden.andrew2060.invasion.rewards.DropHandler;
+import net.kingdomsofarden.andrew2060.invasion.util.MonsterUtil;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class InvasionPlugin extends JavaPlugin {
@@ -35,14 +36,16 @@ public class InvasionPlugin extends JavaPlugin {
     @Override
     public void onEnable() {
         instance = this;
-        //Register Drops
+        // Register Drops
         this.dropHandler = new DropHandler(this);
-        //Register Listeners
+        // Register Listeners
         this.getServer().getPluginManager().registerEvents(new DebugListener(), this);
         this.getServer().getPluginManager().registerEvents(new CreatureSpawnListener(this), this);
         this.getServer().getPluginManager().registerEvents(new CreatureDensityListener(this), this);
         this.getServer().getPluginManager().registerEvents(new RewardListener(this), this);
         this.getServer().getPluginManager().registerEvents(new TrackerListener(this), this);
+        // Initialize reflection data
+        MonsterUtil.init();
     }
 
 

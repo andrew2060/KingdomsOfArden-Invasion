@@ -71,7 +71,11 @@ public class MonsterUtil {
         if (isRegisteredMobType(type)) {
             try {
                 Entity entity = ctors.get(type).newInstance(world);
-                world.addEntity(entity, reason);
+                entity.setPositionRotation(location.getX(), location.getY(), location.getZ(), location.getYaw()
+                        , location.getPitch());
+                if (!world.addEntity(entity, reason)) {
+                    System.out.println("Failed to add custom entity!");
+                }
                 return (IInvasionMob)entity;
             } catch(Exception e) {
                 e.printStackTrace();
