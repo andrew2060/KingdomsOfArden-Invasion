@@ -39,7 +39,7 @@ public class InvasionPlugin extends JavaPlugin {
         this.dropHandler = new DropHandler(this);
         //Register Listeners
         this.getServer().getPluginManager().registerEvents(new DebugListener(), this);
-        this.getServer().getPluginManager().registerEvents(new CreatureScaleListener(this), this);
+        this.getServer().getPluginManager().registerEvents(new CreatureSpawnListener(this), this);
         this.getServer().getPluginManager().registerEvents(new CreatureDensityListener(this), this);
         this.getServer().getPluginManager().registerEvents(new RewardListener(this), this);
         this.getServer().getPluginManager().registerEvents(new TrackerListener(this), this);

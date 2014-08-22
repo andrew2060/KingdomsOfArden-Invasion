@@ -38,7 +38,7 @@ import com.herocraftonline.heroes.api.events.WeaponDamageEvent;
 import com.herocraftonline.heroes.characters.CharacterDamageManager;
 import com.herocraftonline.heroes.characters.Hero;
 
-public class CreatureScaleListener implements Listener {
+public class CreatureSpawnListener implements Listener {
 
     private Random rand;
     private InvasionPlugin plugin;
@@ -75,7 +75,7 @@ public class CreatureScaleListener implements Listener {
     }
 
 
-    public CreatureScaleListener(InvasionPlugin plugin) {
+    public CreatureSpawnListener(InvasionPlugin plugin) {
         this.rand = new SecureRandom();
         this.plugin = plugin;
         try {
@@ -96,78 +96,6 @@ public class CreatureScaleListener implements Listener {
                         event.getOriginalDamage(EntityDamageEvent.DamageModifier.ARMOR) * 0.5);
             }
         }
-//        if (event.getEntity() instanceof Monster) {
-//            Monster m = (Monster)event.getEntity();
-//            int armorSum = 0;
-//            for (ItemStack item : m.getEquipment().getArmorContents()) {
-//
-//                switch (item.getType()) {
-//                case DIAMOND_HELMET:
-//                    armorSum += 2;
-//                    break;
-//                case DIAMOND_CHESTPLATE:
-//                    armorSum += 5;
-//                    break;
-//                case DIAMOND_LEGGINGS:
-//                    armorSum += 4;
-//                    break;
-//                case DIAMOND_BOOTS:
-//                    armorSum += 1;
-//                    break;
-//                case CHAINMAIL_HELMET:
-//                    armorSum += 2;
-//                    break;
-//                case CHAINMAIL_CHESTPLATE:
-//                    armorSum += 5;
-//                    break;
-//                case CHAINMAIL_LEGGINGS:
-//                    armorSum += 4;
-//                    break;
-//                case CHAINMAIL_BOOTS:
-//                    armorSum += 1;
-//                    break;
-//                case IRON_HELMET:
-//                    armorSum += 2;
-//                    break;
-//                case IRON_CHESTPLATE:
-//                    armorSum += 6;
-//                    break;
-//                case IRON_LEGGINGS:
-//                    armorSum += 5;
-//                    break;
-//                case IRON_BOOTS:
-//                    armorSum += 2;
-//                    break;
-//                case GOLD_HELMET:
-//                    armorSum += 2;
-//                    break;
-//                case GOLD_CHESTPLATE:
-//                    armorSum += 5;
-//                    break;
-//                case GOLD_LEGGINGS:
-//                    armorSum += 3;
-//                case GOLD_BOOTS:
-//                    armorSum += 1;
-//                case LEATHER_HELMET:
-//                    armorSum += 1;
-//                    break;
-//                case LEATHER_CHESTPLATE:
-//                    armorSum += 3;
-//                    break;
-//                case LEATHER_LEGGINGS:
-//                    armorSum += 2;
-//                    break;
-//                case LEATHER_BOOTS:
-//                    armorSum += 1;
-//                    break;
-//                default:
-//                    break;
-//                }
-//            }
-//            double damage = event.getDamage();
-//            double preArmor = 25D/(25 - armorSum) * damage;
-//            event.setDamage(preArmor);
-//        }
     }
 
     @EventHandler(priority=EventPriority.HIGHEST, ignoreCancelled = true) 
@@ -175,7 +103,8 @@ public class CreatureScaleListener implements Listener {
         if (!(event.getDamager() instanceof Hero)) {
             LivingEntity ent = event.getDamager().getEntity();
             if (!ent.hasMetadata("mobscaling.exponent")) {
-                if (!(ent instanceof Monster || ent instanceof Ghast || ent instanceof Slime || ent instanceof Golem || ent instanceof EnderDragon)) {
+                if (!(ent instanceof Monster || ent instanceof Ghast || ent instanceof Slime || ent instanceof Golem
+                        || ent instanceof EnderDragon)) {
                     return;
                 }
                 double exponent = (Math.log10(ent.getMaxHealth()/getDefaultMaxHealth(ent))/Math.log10(Config.GROWTH_RATE_HEALTH));
@@ -193,10 +122,11 @@ public class CreatureScaleListener implements Listener {
         }
     }
 
-    @EventHandler(priority=EventPriority.MONITOR, ignoreCancelled = true)
+    @EventHandler(priority=EventPriority.HIGHEST, ignoreCancelled = true)
     public void onMonsterSpawn(CreatureSpawnEvent event) {
         LivingEntity entity = event.getEntity();
-        if (!(entity instanceof Monster || entity instanceof Ghast || entity instanceof Slime || entity instanceof Golem || entity instanceof EnderDragon)) {
+        if (!(entity instanceof Monster || entity instanceof Ghast || entity instanceof Slime
+                || entity instanceof Golem || entity instanceof EnderDragon)) {
             return;
         }
         if (entity.hasMetadata("mobscaling.ignore")) {
@@ -204,6 +134,11 @@ public class CreatureScaleListener implements Listener {
         }
         EntityType type = entity.getType();
         Location spawnLoc = entity.getLocation();
+        if (MonsterUtil.isRegisteredMobType(type) && !MonsterUtil.isInvasionMob(entity)) {
+            event.setCancelled(true);
+            MonsterUtil.spawnMob(type, spawnLoc, event.getSpawnReason());
+            return;
+        }
         Location origin = new Location(spawnLoc.getWorld(), 0, 64, 0);
         double modifier = spawnLoc.distanceSquared(origin);
         double exponent = 0.00;
