@@ -1,4 +1,4 @@
-package net.kingdomsofarden.andrew2060.invasion.monsters.listeners;
+package net.kingdomsofarden.andrew2060.invasion.listeners;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -6,8 +6,10 @@ import java.security.SecureRandom;
 import java.util.Random;
 
 import net.kingdomsofarden.andrew2060.invasion.InvasionPlugin;
+import net.kingdomsofarden.andrew2060.invasion.api.IInvasionMob;
 import net.kingdomsofarden.andrew2060.invasion.util.Config;
 
+import net.kingdomsofarden.andrew2060.invasion.util.MonsterUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -18,20 +20,23 @@ import org.bukkit.entity.Ghast;
 import org.bukkit.entity.Golem;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Monster;
+import org.bukkit.entity.PigZombie;
+import org.bukkit.entity.Skeleton;
 import org.bukkit.entity.Slime;
+import org.bukkit.entity.Zombie;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 
 import com.herocraftonline.heroes.Heroes;
-import com.herocraftonline.heroes.api.events.ExperienceChangeEvent;
 import com.herocraftonline.heroes.api.events.WeaponDamageEvent;
 import com.herocraftonline.heroes.characters.CharacterDamageManager;
 import com.herocraftonline.heroes.characters.Hero;
-import com.herocraftonline.heroes.characters.classes.HeroClass.ExperienceType;
 
 public class CreatureScaleListener implements Listener {
 
@@ -47,11 +52,26 @@ public class CreatureScaleListener implements Listener {
     private static ItemStack[] leather;
 
     static {
-        diamond = new ItemStack[] {new ItemStack(Material.DIAMOND_HELMET), new ItemStack(Material.DIAMOND_CHESTPLATE), new ItemStack(Material.DIAMOND_LEGGINGS), new ItemStack(Material.DIAMOND_BOOTS)};
-        chainmail = new ItemStack[] {new ItemStack(Material.CHAINMAIL_HELMET), new ItemStack(Material.CHAINMAIL_CHESTPLATE), new ItemStack(Material.CHAINMAIL_LEGGINGS), new ItemStack(Material.CHAINMAIL_BOOTS)};
-        iron = new ItemStack[] {new ItemStack(Material.IRON_HELMET), new ItemStack(Material.IRON_CHESTPLATE), new ItemStack(Material.IRON_LEGGINGS), new ItemStack(Material.IRON_BOOTS)};
-        gold = new ItemStack[] {new ItemStack(Material.GOLD_HELMET), new ItemStack(Material.GOLD_CHESTPLATE), new ItemStack(Material.GOLD_LEGGINGS), new ItemStack(Material.GOLD_BOOTS)};
-        leather = new ItemStack[] {new ItemStack(Material.LEATHER_HELMET), new ItemStack(Material.LEATHER_CHESTPLATE), new ItemStack(Material.LEATHER_LEGGINGS), new ItemStack(Material.LEATHER_BOOTS)};
+        diamond = new ItemStack[] {
+                new ItemStack(Material.DIAMOND_HELMET), new ItemStack(Material.DIAMOND_CHESTPLATE),
+                new ItemStack(Material.DIAMOND_LEGGINGS), new ItemStack(Material.DIAMOND_BOOTS)
+        };
+        chainmail = new ItemStack[] {
+                new ItemStack(Material.CHAINMAIL_HELMET), new ItemStack(Material.CHAINMAIL_CHESTPLATE),
+                new ItemStack(Material.CHAINMAIL_LEGGINGS), new ItemStack(Material.CHAINMAIL_BOOTS)
+        };
+        iron = new ItemStack[] {
+                new ItemStack(Material.IRON_HELMET), new ItemStack(Material.IRON_CHESTPLATE),
+                new ItemStack(Material.IRON_LEGGINGS), new ItemStack(Material.IRON_BOOTS)
+        };
+        gold = new ItemStack[] {
+                new ItemStack(Material.GOLD_HELMET), new ItemStack(Material.GOLD_CHESTPLATE),
+                new ItemStack(Material.GOLD_LEGGINGS), new ItemStack(Material.GOLD_BOOTS)
+        };
+        leather = new ItemStack[] {
+                new ItemStack(Material.LEATHER_HELMET), new ItemStack(Material.LEATHER_CHESTPLATE),
+                new ItemStack(Material.LEATHER_LEGGINGS), new ItemStack(Material.LEATHER_BOOTS)
+        };
     }
 
 
@@ -59,7 +79,8 @@ public class CreatureScaleListener implements Listener {
         this.rand = new SecureRandom();
         this.plugin = plugin;
         try {
-            this.getEntityHealth = CharacterDamageManager.class.getDeclaredMethod("getEntityMaxHealth", new Class[] {LivingEntity.class});
+            this.getEntityHealth = CharacterDamageManager.class.getDeclaredMethod("getEntityMaxHealth",
+                    new Class[] {LivingEntity.class});
         } catch (NoSuchMethodException | SecurityException e) {
             e.printStackTrace();
         }
@@ -67,79 +88,86 @@ public class CreatureScaleListener implements Listener {
     }
 
     @EventHandler(priority=EventPriority.HIGHEST, ignoreCancelled = true) 
-    public void antiArmorListener(WeaponDamageEvent event) {
-        if (event.getEntity() instanceof Monster) {
-            Monster m = (Monster)event.getEntity();
-            int armorSum = 0;
-            for (ItemStack item : m.getEquipment().getArmorContents()) {
-
-                switch (item.getType()) {
-                case DIAMOND_HELMET:
-                    armorSum += 2;
-                    break; 
-                case DIAMOND_CHESTPLATE:
-                    armorSum += 5;
-                    break;
-                case DIAMOND_LEGGINGS:
-                    armorSum += 4;
-                    break;
-                case DIAMOND_BOOTS:
-                    armorSum += 1;
-                    break;
-                case CHAINMAIL_HELMET: 
-                    armorSum += 2;
-                    break;
-                case CHAINMAIL_CHESTPLATE:
-                    armorSum += 5;
-                    break;
-                case CHAINMAIL_LEGGINGS:
-                    armorSum += 4;
-                    break;
-                case CHAINMAIL_BOOTS:
-                    armorSum += 1;
-                    break;
-                case IRON_HELMET:
-                    armorSum += 2;
-                    break;
-                case IRON_CHESTPLATE:
-                    armorSum += 6;
-                    break;
-                case IRON_LEGGINGS:
-                    armorSum += 5;
-                    break;
-                case IRON_BOOTS: 
-                    armorSum += 2;
-                    break;
-                case GOLD_HELMET:
-                    armorSum += 2;
-                    break;
-                case GOLD_CHESTPLATE:
-                    armorSum += 5;
-                    break;
-                case GOLD_LEGGINGS: 
-                    armorSum += 3;
-                case GOLD_BOOTS: 
-                    armorSum += 1;
-                case LEATHER_HELMET:
-                    armorSum += 1;
-                    break;
-                case LEATHER_CHESTPLATE: 
-                    armorSum += 3;
-                    break;
-                case LEATHER_LEGGINGS: 
-                    armorSum += 2;
-                    break;
-                case LEATHER_BOOTS: 
-                    armorSum += 1;
-                    break;
-                default:
-                    break;
-                }
+    public void antiArmorListener(EntityDamageByEntityEvent event) {
+        if (event.getEntity() instanceof Zombie || event.getEntity() instanceof Skeleton
+                || event.getEntity() instanceof PigZombie) {
+            if (event.isApplicable(EntityDamageEvent.DamageModifier.ARMOR)) {
+                event.setDamage(EntityDamageEvent.DamageModifier.ARMOR,
+                        event.getOriginalDamage(EntityDamageEvent.DamageModifier.ARMOR) * 0.5);
             }
-            double damage = event.getDamage();
-            double preArmor = 25D/(25 - armorSum) * damage;
-            event.setDamage(preArmor);
         }
+//        if (event.getEntity() instanceof Monster) {
+//            Monster m = (Monster)event.getEntity();
+//            int armorSum = 0;
+//            for (ItemStack item : m.getEquipment().getArmorContents()) {
+//
+//                switch (item.getType()) {
+//                case DIAMOND_HELMET:
+//                    armorSum += 2;
+//                    break;
+//                case DIAMOND_CHESTPLATE:
+//                    armorSum += 5;
+//                    break;
+//                case DIAMOND_LEGGINGS:
+//                    armorSum += 4;
+//                    break;
+//                case DIAMOND_BOOTS:
+//                    armorSum += 1;
+//                    break;
+//                case CHAINMAIL_HELMET:
+//                    armorSum += 2;
+//                    break;
+//                case CHAINMAIL_CHESTPLATE:
+//                    armorSum += 5;
+//                    break;
+//                case CHAINMAIL_LEGGINGS:
+//                    armorSum += 4;
+//                    break;
+//                case CHAINMAIL_BOOTS:
+//                    armorSum += 1;
+//                    break;
+//                case IRON_HELMET:
+//                    armorSum += 2;
+//                    break;
+//                case IRON_CHESTPLATE:
+//                    armorSum += 6;
+//                    break;
+//                case IRON_LEGGINGS:
+//                    armorSum += 5;
+//                    break;
+//                case IRON_BOOTS:
+//                    armorSum += 2;
+//                    break;
+//                case GOLD_HELMET:
+//                    armorSum += 2;
+//                    break;
+//                case GOLD_CHESTPLATE:
+//                    armorSum += 5;
+//                    break;
+//                case GOLD_LEGGINGS:
+//                    armorSum += 3;
+//                case GOLD_BOOTS:
+//                    armorSum += 1;
+//                case LEATHER_HELMET:
+//                    armorSum += 1;
+//                    break;
+//                case LEATHER_CHESTPLATE:
+//                    armorSum += 3;
+//                    break;
+//                case LEATHER_LEGGINGS:
+//                    armorSum += 2;
+//                    break;
+//                case LEATHER_BOOTS:
+//                    armorSum += 1;
+//                    break;
+//                default:
+//                    break;
+//                }
+//            }
+//            double damage = event.getDamage();
+//            double preArmor = 25D/(25 - armorSum) * damage;
+//            event.setDamage(preArmor);
+//        }
     }
 
     @EventHandler(priority=EventPriority.HIGHEST, ignoreCancelled = true) 
@@ -354,6 +382,12 @@ public class CreatureScaleListener implements Listener {
         entity.setMetadata("mobscaling.exponent", new FixedMetadataValue(this.plugin, exponent));
         entity.setMetadata("mobscaling.tier", new FixedMetadataValue(this.plugin, tier));
         entity.setMetadata("mobscaling.elite", new FixedMetadataValue(this.plugin, elite));
+        IInvasionMob mob = MonsterUtil.getInvasionMob(entity);
+        if (mob != null) {
+            mob.setElite(elite);
+            mob.setTier(tier);
+            mob.update();
+        }
     }
 
 

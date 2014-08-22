@@ -4,9 +4,15 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.inventory.ItemStack;
 
 import java.security.SecureRandom;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Random;
+import java.util.UUID;
 
 public class DropTable {
 
@@ -151,5 +157,51 @@ public class DropTable {
             }
         }
         return add;
+    }
+
+    public Collection<ItemStack> getDrops(UUID world, int tier, boolean elite) {
+        List<ItemStack> drops = new LinkedList<>();
+        for (DropItem item : this.drops.get(world)) {
+            if (!item.isEliteOnly() || elite) {
+                if (tier >= item.getLevelReqMin() && tier <= item.getLevelReqMax()) {
+                    if (this.rand.nextDouble() < item.getChance()) {
+                        drops.add(item.getDrop(this.rand.nextDouble()));
+                    }
+                }
+            }
+        }
+        for (DropGroup group : this.groups.get(world)) {
+            for (DropItem item : group.getDrops()) {
+                if (!item.isEliteOnly() || elite) {
+                    if (tier >= item.getLevelReqMin() && tier <= item.getLevelReqMax()) {
+                        if (this.rand.nextDouble() < item.getChance()) {
+                            drops.add(item.getDrop(this.rand.nextDouble()));
+                        }
+                    }
+                }
+            }
+        }
+        return drops;
+    }
+
+    public void print() {
+        for (UUID id : this.drops.keySet()) {
+            System.out.println("    Drops for world " + Bukkit.getServer().getWorld(id).getName());
+            for (DropItem item : this.drops.get(id)) {
+                System.out.println("      Type: " + item.getItem().toItemStack(1).getType() + " Amount: "
+                        + item.getLower() + "-" + (item.getDiff() + item.getLower()));
+            }
+            for (DropGroup group : this.groups.get(id)) {
+                System.out.println("    For Group");
+                for (DropItem item : group.getDrops()) {
+                    System.out.println("          Type: " + item.getItem().toItemStack(1).getType() + " Amount: "
+                            + item.getLower() + "-" + (item.getDiff() + item.getLower()));
+                }
+            }
+        }
+    }
+
+    public boolean replace() {
+        return this.replace;
     }
 }

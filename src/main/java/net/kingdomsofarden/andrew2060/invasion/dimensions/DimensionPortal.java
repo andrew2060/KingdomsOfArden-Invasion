@@ -36,7 +36,7 @@ public class DimensionPortal {
 
 
     public static DimensionPortal fromId(UUID id) {
-        InvasionPlugin plugin = InvasionPlugin.instance;
+        InvasionPlugin plugin = InvasionPlugin.i();
         File storageFolder = plugin.getDataFolder();
         storageFolder.mkdir();
         File file = new File(storageFolder.getPath() + "/" + id.toString());

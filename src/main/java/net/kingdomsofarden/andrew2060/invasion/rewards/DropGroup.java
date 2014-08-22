@@ -10,11 +10,11 @@ import java.util.List;
 public class DropGroup {
 
     private final DropHandler config;
-    private HashMap<Boolean, List<DropItem>> drops;
+    private LinkedList<DropItem> drops;
 
     public DropGroup(DropHandler config, ConfigurationSection groupSection) {
         this.config = config;
-        List<DropItem> add = new LinkedList<DropItem>();
+        this.drops = new LinkedList<DropItem>();
         for (String entry : groupSection.getStringList("vanilla"))  {
             try {
                 String[] parse = entry.split(" ");
@@ -49,7 +49,7 @@ public class DropGroup {
                 if (parse.length >= 5) {
                     eliteOnly = Boolean.valueOf(parse[4]);
                 }
-                add.add(new DropItem(lower, diff, chance, eliteOnly, minTier, maxTier, new Item(mat, null, null, null, null)));
+                drops.add(new DropItem(lower, diff, chance, eliteOnly, minTier, maxTier, new Item(mat, null, null, null, null)));
             } catch (Exception e) {
                 continue;
             }
@@ -86,7 +86,7 @@ public class DropGroup {
                     if (parse.length >= 5) {
                         eliteOnly = Boolean.valueOf(parse[4]);
                     }
-                    add.add(new DropItem(lower, diff, chance, eliteOnly, minTier, maxTier, item));
+                    drops.add(new DropItem(lower, diff, chance, eliteOnly, minTier, maxTier, item));
                 } else {
                     throw new IllegalArgumentException("No config item named " + entry + " exists or error loading" +
                             ": check items.yml!");
@@ -95,6 +95,10 @@ public class DropGroup {
                 continue;
             }
         }
+    }
+
+    public List<DropItem> getDrops() {
+        return this.drops;
     }
 
 }

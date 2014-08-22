@@ -3,6 +3,7 @@ package net.kingdomsofarden.andrew2060.invasion.util;
 import java.security.SecureRandom;
 import java.util.HashMap;
 import java.util.Random;
+import java.util.UUID;
 import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
@@ -23,7 +24,7 @@ public class InvasionSettings {
     private double healthMultiplier;
     private double damageMultiplier;
     private double expMultiplier;
-    private HashMap<World,Long> blocksPerScaleMultiplier;
+    private HashMap<UUID,Long> blocksPerScaleMultiplier;
     
     public InvasionSettings(InvasionPlugin plugin) {
         instance = this;
@@ -41,7 +42,7 @@ public class InvasionSettings {
         this.setExpMultiplier(config.getDouble("mobs.expMultiplier", 1.2));
         this.setBossSkillCooldown(config.getLong("mobs.skillCooldown",5000));
         
-        this.blocksPerScaleMultiplier = new HashMap<World,Long>();
+        this.blocksPerScaleMultiplier = new HashMap<UUID,Long>();
         
         for (String s : config.getConfigurationSection("mobs.scalePerXBlocks").getValues(false).keySet()) {
             World w = Bukkit.getServer().getWorld(s);
@@ -49,14 +50,14 @@ public class InvasionSettings {
                 this.plugin.getLogger().log(Level.SEVERE, "Configuration Error: World " + s + " not found!");
                 continue;
             } else {
-                blocksPerScaleMultiplier.put(w,config.getLong("mobs.scalePerXBlocks." + s));
+                blocksPerScaleMultiplier.put(w.getUID(),config.getLong("mobs.scalePerXBlocks." + s));
             }
         }
         
         this.plugin.saveConfig();
     }
     
-    public static InvasionSettings get() {
+    public static InvasionSettings i() {
         return instance;
     }
     

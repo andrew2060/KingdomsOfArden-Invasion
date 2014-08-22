@@ -19,7 +19,20 @@ public class TrackerStorage extends HashMap<String,TrackerValue> {
                  totalPlayer += add;
             }
         }
-        return totalPlayer/total > 0.7 ? totalPlayer : total;
+        return totalPlayer/total >= 0.7 ? totalPlayer : total;
+    }
+
+    public boolean isDroppable() {
+        double total = 0;
+        double totalPlayer = 0;
+        for (Map.Entry<String, TrackerValue> entry : this.entrySet()) {
+            double add = entry.getValue().getTotalDamage();
+            total += add;
+            if (!entry.getKey().regionMatches(0, "env", 0, 3)) {
+                totalPlayer += add;
+            }
+        }
+        return totalPlayer/total >= 0.7;
     }
     
     public HashMap<UUID,Double> getContributingPlayers() {

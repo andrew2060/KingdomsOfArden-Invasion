@@ -41,7 +41,7 @@ public class DimensionManager {
     
     public Dimension generateNewDimension(DimensionType type) {
         String baseName = type.getName();
-        File file = new File(InvasionPlugin.instance.getDataFolder().getPath() + "Dimensions" + File.pathSeparator + baseName);
+        File file = new File(InvasionPlugin.i().getDataFolder().getPath() + "Dimensions" + File.pathSeparator + baseName);
         
         return null;
         

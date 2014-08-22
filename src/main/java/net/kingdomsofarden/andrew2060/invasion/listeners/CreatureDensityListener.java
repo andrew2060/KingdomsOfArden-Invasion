@@ -1,4 +1,4 @@
-package net.kingdomsofarden.andrew2060.invasion.monsters.listeners;
+package net.kingdomsofarden.andrew2060.invasion.listeners;
 
 import net.kingdomsofarden.andrew2060.invasion.InvasionPlugin;
 

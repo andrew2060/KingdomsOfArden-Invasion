@@ -4,10 +4,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Level;
 
 import net.kingdomsofarden.andrew2060.invasion.InvasionPlugin;
@@ -47,16 +44,22 @@ public class DropHandler {
     }
 
     private void loadConfigs() {
+        System.out.println("Loading drops");
         this.dropConfig = this.loadConfig(new File(this.plugin.getDataFolder(), "drops.yml"));
         this.groupConfig = this.loadConfig(new File(this.plugin.getDataFolder(), "groups.yml"));
         this.itemConfig = this.loadConfig(new File(this.plugin.getDataFolder(), "items.yml"));
         this.loadItems();
         this.loadGroups();
         this.loadDrops();
+        for (EntityType type : this.drops.keySet()) {
+            System.out.println(type.getName() + " =========");
+            this.drops.get(type).print();
+        }
     }
 
     private void loadItems() {
         for (String itemName : this.itemConfig.getKeys(false)) {
+            System.out.println(itemName);
             try {
                 ConfigurationSection itemSection = this.itemConfig.getConfigurationSection(itemName);
                 Material type = Material.valueOf(itemSection.getString("material"));
@@ -123,7 +126,9 @@ public class DropHandler {
                 continue;
             } else {
                 try {
+                    boolean replace = this.dropConfig.getBoolean(key + ".replace");
                     DropTable drops = new DropTable(this, this.dropConfig.getConfigurationSection(key));
+                    this.drops.put(type, drops);
                 } catch (Exception e) {
                     e.printStackTrace();
                     continue;
@@ -165,22 +170,15 @@ public class DropHandler {
         return this.groups.get(name.toLowerCase());
     }
 
-    public Collection<ItemStack> getMonsterDrops(EntityType type, String world, int tier) {
-        return null;
+    public void setDrops(EntityType type, UUID world, int tier, boolean elite,
+                         Collection<ItemStack> existing) {
+        DropTable table = this.drops.get(type);
+        if (table != null) {
+            if (table.replace()) {
+                existing.clear();
+            }
+            existing.addAll(table.getDrops(world, tier, elite));
+        }
     }
-
-    public Collection<ItemStack> getBossDrops(EntityType type, String world, int tier) {
-        return null;
-    }
-
-    public Collection<ItemStack> getDimensionalStabilizerDrops(DimensionType type, int tier) {
-        return null;
-    }
-
-    public Collection<ItemStack> getDimensionDrops(DimensionType type, int tier) {
-        return null;
-    }
-
-
 
 }

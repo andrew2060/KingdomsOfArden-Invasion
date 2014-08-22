@@ -1,4 +1,4 @@
-package net.kingdomsofarden.andrew2060.invasion.tracker.listeners;
+package net.kingdomsofarden.andrew2060.invasion.listeners;
 
 import com.herocraftonline.heroes.api.events.CharacterDamageEvent;
 import com.herocraftonline.heroes.api.events.SkillDamageEvent;
@@ -14,12 +14,17 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.metadata.FixedMetadataValue;
 
-public class TrackerListener {
+public class TrackerListener implements Listener {
     
     private InvasionPlugin instance;
+
+    public TrackerListener(InvasionPlugin i) {
+        this.instance = i;
+    }
         
     @EventHandler(priority=EventPriority.MONITOR, ignoreCancelled = true)
     public void onWeaponDamage(WeaponDamageEvent event) {
@@ -52,7 +57,7 @@ public class TrackerListener {
     public void applyDamageMetadata(DamageCause cause, Entity damager, Entity damaged, double damage) {
         if (!damaged.hasMetadata(Constants.DAMAGETRACKER_META)) { //Create new meta tracking
             TrackerStorage obj = new TrackerStorage();
-            damaged.setMetadata(Constants.DAMAGETRACKER_META, new FixedMetadataValue(InvasionPlugin.instance, obj));
+            damaged.setMetadata(Constants.DAMAGETRACKER_META, new FixedMetadataValue(instance, obj));
         }
 
         TrackerStorage val = (TrackerStorage) damaged.getMetadata(Constants.DAMAGETRACKER_META).get(0).value();

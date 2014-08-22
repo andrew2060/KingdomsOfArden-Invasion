@@ -4,3 +4,4 @@ description: Mob Invasions to Overworld
 author: Andrew2060
 website: http://www.kingdomsofarden.net/
 main: net.kingdomsofarden.andrew2060.invasion.InvasionPlugin
+depend: [Heroes, KingdomsOfArden-PluginAPI]

@@ -29,7 +29,7 @@ public class DimensionSpawner {
         this.location = spawnerLoc;
         this.random = new Random();
         this.health = 100;
-        this.tickTask = Bukkit.getServer().getScheduler().runTaskTimer(InvasionPlugin.instance, new Runnable() {
+        this.tickTask = Bukkit.getServer().getScheduler().runTaskTimer(InvasionPlugin.i(), new Runnable() {
 
             @Override
             public void run() {
