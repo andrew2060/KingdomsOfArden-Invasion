@@ -231,7 +231,7 @@ public class RewardListener implements Listener {
         int aTierLevel = getTieredLevel(attacker, aClass); 
         int dTierLevel = getTieredLevel(defender, dClass);
         
-        int diff = aTierLevel - dTierLevel;
+        int diff = dTierLevel - aTierLevel;
 
         double exp = Config.PVP_EXP_BASE * (dClass.getTier() + 1);
         double mod = Config.PVP_EXP_PER_LEVEL_DIFF * diff;
